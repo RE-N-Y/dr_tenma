@@ -1,0 +1,179 @@
+type Student {
+  id: ID!
+  name: String
+  email: AWSEmail
+  records: [Symptom]
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  owner: String
+}
+
+type Symptom {
+  Fever: Boolean!
+  Coughing: Boolean!
+  Breathing: Boolean!
+  SoreThroat: Boolean!
+  Allergies: Boolean!
+  BodyAches: Boolean!
+  note: String
+  createdAt: AWSDateTime!
+}
+
+input SymptomInput {
+  Fever: Boolean!
+  Coughing: Boolean!
+  Breathing: Boolean!
+  SoreThroat: Boolean!
+  Allergies: Boolean!
+  BodyAches: Boolean!
+  note: String
+  createdAt: AWSDateTime!
+}
+
+enum ModelSortDirection {
+  ASC
+  DESC
+}
+
+type ModelStudentConnection {
+  items: [Student]
+  nextToken: String
+}
+
+input ModelStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelBooleanInput {
+  ne: Boolean
+  eq: Boolean
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelSizeInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+}
+
+input ModelStudentFilterInput {
+  id: ModelIDInput
+  name: ModelStringInput
+  email: ModelStringInput
+  and: [ModelStudentFilterInput]
+  or: [ModelStudentFilterInput]
+  not: ModelStudentFilterInput
+}
+
+enum ModelAttributeTypes {
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+  _null
+}
+
+type Query {
+  getStudent(id: ID!): Student
+  listStudents(filter: ModelStudentFilterInput, limit: Int, nextToken: String): ModelStudentConnection
+}
+
+input CreateStudentInput {
+  id: ID
+  name: String
+  email: AWSEmail
+  records: [SymptomInput]
+}
+
+input UpdateStudentInput {
+  id: ID!
+  name: String
+  email: AWSEmail
+  records: [SymptomInput]
+}
+
+input DeleteStudentInput {
+  id: ID
+}
+
+type Mutation {
+  createStudent(input: CreateStudentInput!, condition: ModelStudentConditionInput): Student
+  updateStudent(input: UpdateStudentInput!, condition: ModelStudentConditionInput): Student
+  deleteStudent(input: DeleteStudentInput!, condition: ModelStudentConditionInput): Student
+}
+
+input ModelStudentConditionInput {
+  name: ModelStringInput
+  email: ModelStringInput
+  and: [ModelStudentConditionInput]
+  or: [ModelStudentConditionInput]
+  not: ModelStudentConditionInput
+}
+
+type Subscription {
+  onCreateStudent(owner: String): Student @aws_subscribe(mutations: ["createStudent"])
+  onUpdateStudent: Student @aws_subscribe(mutations: ["updateStudent"])
+  onDeleteStudent: Student @aws_subscribe(mutations: ["deleteStudent"])
+}
