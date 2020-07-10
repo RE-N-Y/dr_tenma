@@ -17,12 +17,18 @@ type Student
 }
 
 type Symptom {
-  Fever: Boolean!
-  Coughing: Boolean!
-  Breathing: Boolean!
-  SoreThroat: Boolean!
-  Allergies: Boolean!
-  BodyAches: Boolean!
+  fever: Boolean!
+  coughing: Boolean!
+  breathing: Boolean!
+  soreThroat: Boolean!
+  allergies: Boolean!
+  bodyAches: Boolean!
+  location: Location
   note: String
   createdAt: AWSDateTime!
+}
+
+type Location {
+  longitude: Float!
+  latitude: Float!
 }
