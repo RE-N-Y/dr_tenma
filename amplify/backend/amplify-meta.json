@@ -21,7 +21,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-134814-deployment/amplify-cfn-templates/auth/drchatbot82273129-cloudformation-template.yml",
 				"logicalId": "authdrchatbot82273129"
 			},
-			"lastPushTimeStamp": "2020-07-09T05:40:31.152Z",
+			"lastPushTimeStamp": "2020-07-09T08:46:33.884Z",
 			"output": {
 				"AppClientSecret": "1q2lp82h82oumj787bf1493jve5vq2k05tfhbt9vujicki06madb",
 				"UserPoolId": "us-east-1_b3TMYyiGr",
@@ -49,7 +49,7 @@
 					]
 				}
 			],
-			"lastPushTimeStamp": "2020-07-09T05:40:34.336Z",
+			"lastPushTimeStamp": "2020-07-09T08:46:33.885Z",
 			"providerMetadata": {
 				"s3TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-134814-deployment/amplify-cfn-templates/auth/template.json",
 				"logicalId": "authuserPoolGroups"
@@ -82,8 +82,8 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-134814-deployment/amplify-cfn-templates/api/cloudformation-template.json",
 				"logicalId": "apidrchatbot"
 			},
-			"lastPushTimeStamp": "2020-07-09T05:40:34.336Z",
-			"lastPushDirHash": "c/321XQj+Jv3dIwYwCoa4O6l6zg="
+			"lastPushTimeStamp": "2020-07-09T08:46:36.255Z",
+			"lastPushDirHash": "uIz3HEX0mqRbpzvbEFIVO/tVBRk="
 		}
 	}
 }

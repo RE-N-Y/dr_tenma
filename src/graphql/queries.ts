@@ -9,12 +9,16 @@ export const getStudent = /* GraphQL */ `
       name
       email
       records {
-        Fever
-        Coughing
-        Breathing
-        SoreThroat
-        Allergies
-        BodyAches
+        fever
+        coughing
+        breathing
+        soreThroat
+        allergies
+        bodyAches
+        location {
+          longitude
+          latitude
+        }
         note
         createdAt
       }
@@ -36,12 +40,12 @@ export const listStudents = /* GraphQL */ `
         name
         email
         records {
-          Fever
-          Coughing
-          Breathing
-          SoreThroat
-          Allergies
-          BodyAches
+          fever
+          coughing
+          breathing
+          soreThroat
+          allergies
+          bodyAches
           note
           createdAt
         }

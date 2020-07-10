@@ -9,12 +9,16 @@ export const onCreateStudent = /* GraphQL */ `
       name
       email
       records {
-        Fever
-        Coughing
-        Breathing
-        SoreThroat
-        Allergies
-        BodyAches
+        fever
+        coughing
+        breathing
+        soreThroat
+        allergies
+        bodyAches
+        location {
+          longitude
+          latitude
+        }
         note
         createdAt
       }
@@ -31,12 +35,16 @@ export const onUpdateStudent = /* GraphQL */ `
       name
       email
       records {
-        Fever
-        Coughing
-        Breathing
-        SoreThroat
-        Allergies
-        BodyAches
+        fever
+        coughing
+        breathing
+        soreThroat
+        allergies
+        bodyAches
+        location {
+          longitude
+          latitude
+        }
         note
         createdAt
       }
@@ -53,12 +61,16 @@ export const onDeleteStudent = /* GraphQL */ `
       name
       email
       records {
-        Fever
-        Coughing
-        Breathing
-        SoreThroat
-        Allergies
-        BodyAches
+        fever
+        coughing
+        breathing
+        soreThroat
+        allergies
+        bodyAches
+        location {
+          longitude
+          latitude
+        }
         note
         createdAt
       }
