@@ -68,15 +68,15 @@
 				}
 			}
 		},
-		"authdrchatbot82273129": {
+		"authdrchatbot8488576e": {
 			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {
-				"TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-134814-deployment/amplify-cfn-templates/auth/drchatbot82273129-cloudformation-template.yml",
+				"TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-180525-deployment/amplify-cfn-templates/auth/drchatbot8488576e-cloudformation-template.yml",
 				"Parameters": {
-					"identityPoolName": "drchatbot82273129_identitypool_82273129",
+					"identityPoolName": "drchatbot8488576e_identitypool_8488576e",
 					"allowUnauthenticatedIdentities": false,
-					"resourceNameTruncated": "drchat82273129",
-					"userPoolName": "drchatbot82273129_userpool_82273129",
+					"resourceNameTruncated": "drchat8488576e",
+					"userPoolName": "drchatbot8488576e_userpool_8488576e",
 					"autoVerifiedAttributes": "email",
 					"mfaConfiguration": "OFF",
 					"mfaTypes": "SMS Text Message",
@@ -92,10 +92,10 @@
 					"userpoolClientRefreshTokenValidity": 30,
 					"userpoolClientWriteAttributes": "email",
 					"userpoolClientReadAttributes": "email",
-					"userpoolClientLambdaRole": "drchat82273129_userpoolclient_lambda_role",
+					"userpoolClientLambdaRole": "drchat8488576e_userpoolclient_lambda_role",
 					"userpoolClientSetAttributes": false,
-					"sharedId": "82273129",
-					"resourceName": "drchatbot82273129",
+					"sharedId": "8488576e",
+					"resourceName": "drchatbot8488576e",
 					"authSelections": "identityPoolAndUserPool",
 					"authRoleArn": {
 						"Fn::GetAtt": [
@@ -117,55 +117,10 @@
 				}
 			}
 		},
-		"authuserPoolGroups": {
-			"Type": "AWS::CloudFormation::Stack",
-			"Properties": {
-				"TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-134814-deployment/amplify-cfn-templates/auth/template.json",
-				"Parameters": {
-					"AuthRoleArn": {
-						"Fn::GetAtt": [
-							"AuthRole",
-							"Arn"
-						]
-					},
-					"UnauthRoleArn": {
-						"Fn::GetAtt": [
-							"UnauthRole",
-							"Arn"
-						]
-					},
-					"authdrchatbot82273129UserPoolId": {
-						"Fn::GetAtt": [
-							"authdrchatbot82273129",
-							"Outputs.UserPoolId"
-						]
-					},
-					"authdrchatbot82273129AppClientIDWeb": {
-						"Fn::GetAtt": [
-							"authdrchatbot82273129",
-							"Outputs.AppClientIDWeb"
-						]
-					},
-					"authdrchatbot82273129AppClientID": {
-						"Fn::GetAtt": [
-							"authdrchatbot82273129",
-							"Outputs.AppClientID"
-						]
-					},
-					"authdrchatbot82273129IdentityPoolId": {
-						"Fn::GetAtt": [
-							"authdrchatbot82273129",
-							"Outputs.IdentityPoolId"
-						]
-					},
-					"env": "dev"
-				}
-			}
-		},
 		"apidrchatbot": {
 			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {
-				"TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-134814-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+				"TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-180525-deployment/amplify-cfn-templates/api/cloudformation-template.json",
 				"Parameters": {
 					"CreateAPIKey": 0,
 					"AppSyncApiName": "drchatbot",
@@ -173,12 +128,12 @@
 					"DynamoDBEnableServerSideEncryption": "false",
 					"AuthCognitoUserPoolId": {
 						"Fn::GetAtt": [
-							"authdrchatbot82273129",
+							"authdrchatbot8488576e",
 							"Outputs.UserPoolId"
 						]
 					},
-					"S3DeploymentBucket": "amplify-drchatbot-dev-134814-deployment",
-					"S3DeploymentRootKey": "amplify-appsync-files/2d88f418517bd44eef4d454faa03886cc91880b3",
+					"S3DeploymentBucket": "amplify-drchatbot-dev-180525-deployment",
+					"S3DeploymentRootKey": "amplify-appsync-files/fd2109f61651bfaff1e63bd047956d5a7d581c88",
 					"env": "dev"
 				}
 			}
@@ -187,7 +142,7 @@
 			"DependsOn": [
 				"AuthRole",
 				"UnauthRole",
-				"authdrchatbot82273129"
+				"authdrchatbot8488576e"
 			],
 			"Type": "AWS::Lambda::Function",
 			"Properties": {
@@ -270,7 +225,7 @@
 				},
 				"idpId": {
 					"Fn::GetAtt": [
-						"authdrchatbot82273129",
+						"authdrchatbot8488576e",
 						"Outputs.IdentityPoolId"
 					]
 				},

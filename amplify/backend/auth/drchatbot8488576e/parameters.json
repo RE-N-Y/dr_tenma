@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "drchatbot82273129_identitypool_82273129",
+    "identityPoolName": "drchatbot8488576e_identitypool_8488576e",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "drchat82273129",
-    "userPoolName": "drchatbot82273129_userpool_82273129",
+    "resourceNameTruncated": "drchat8488576e",
+    "userPoolName": "drchatbot8488576e_userpool_8488576e",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -28,10 +28,10 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "drchat82273129_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "drchat8488576e_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "82273129",
-    "resourceName": "drchatbot82273129",
+    "sharedId": "8488576e",
+    "resourceName": "drchatbot8488576e",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [

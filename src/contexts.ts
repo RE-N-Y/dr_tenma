@@ -1,11 +1,12 @@
 import React from "react";
 
 export enum AuthState {
-  SignIn = "SignIn",
+  Signin = "Signin",
   SignedIn = "SingedIn",
   SignUp = "SignUp",
   ConfirmSignUp = "ConfirmSignUp",
   ResetPassword = "ResetPassword",
+  ConfirmResetPassword = "ConfirmResetPassword",
   Loading = "Loading",
 }
 
@@ -18,7 +19,7 @@ interface AuthContext {
 
 export const AuthContext = React.createContext<AuthContext>({
   user: undefined,
-  authState: AuthState.SignIn,
+  authState: AuthState.Signin,
   setUser: (user) => {},
   setAuthState: (authState) => {},
 });
