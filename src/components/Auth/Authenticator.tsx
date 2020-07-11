@@ -1,58 +1,93 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { AuthState, AuthContext } from "../../contexts";
-import SignIn from "./SignIn";
+import Signin from "./Signin";
 import ConfirmSignup from "./ConfirmSignup";
 import Signup from "./Signup";
 import ResetPassword from "./ResetPassword";
-import { LinearProgress, Grid, Paper } from "@material-ui/core";
+import ConfirmNewPassword from "./ConfirmNewPassword";
+import { LinearProgress, Paper } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { TrackChanges } from "@material-ui/icons";
 
+import { Auth } from "@aws-amplify/auth";
+import { Hub, HubCapsule } from "@aws-amplify/core";
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    image: {
-      backgroundImage: "url(https://source.unsplash.com/collection/9717149)",
-      backgroundRepeat: "no-repeat",
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-    },
     paper: {
-      margin: theme.spacing(8, 4),
+      width: 800,
+      padding: theme.spacing(8, 4),
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
+      "& .MuiTextField-root": {
+        margin: theme.spacing(1),
+      },
+      "& .MuiButton-root": {
+        margin: theme.spacing(3, 0, 2),
+      },
+    },
+    logo: {
+      margin: theme.spacing(1),
     },
   })
 );
 
 const Authenticator: React.FC = () => {
-  const { authState } = useContext(AuthContext);
+  const { authState, setAuthState, setUser } = useContext(AuthContext);
   const classes = useStyles();
+
+  useEffect(() => {
+    let updateAuth = async (data: HubCapsule) => {
+      const { event, message } = data.payload;
+      switch (event) {
+        case "signIn":
+          setAuthState(AuthState.SignedIn);
+          setUser(await Auth.currentAuthenticatedUser());
+          break;
+        case "signUp":
+          setAuthState(AuthState.ConfirmSignUp);
+          break;
+        case "signOut":
+          setAuthState(AuthState.Signin);
+          setUser(undefined);
+          break;
+        case "forgotPassword":
+          setAuthState(AuthState.ConfirmResetPassword);
+          break;
+        case "forgotPasswordSubmit":
+          setAuthState(AuthState.Signin);
+          break;
+      }
+      console.log({ event, message });
+    };
+
+    Hub.listen("auth", updateAuth);
+    return () => Hub.remove("auth", updateAuth);
+  });
+
   const renderForm = () => {
     switch (authState) {
-      case AuthState.SignIn:
-        return <SignIn />;
+      case AuthState.Signin:
+        return <Signin />;
       case AuthState.SignUp:
         return <Signup />;
       case AuthState.ConfirmSignUp:
         return <ConfirmSignup />;
       case AuthState.ResetPassword:
         return <ResetPassword />;
+      case AuthState.ConfirmResetPassword:
+        return <ConfirmNewPassword />;
       default:
         return <LinearProgress />;
     }
   };
 
   return (
-    <>
-      <Grid item xs={false} sm={4} md={7} className={classes.image} />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <div className={classes.paper}>
-          <TrackChanges fontSize="large" />
-          {renderForm()}
-        </div>
-      </Grid>
-    </>
+    <Paper className={classes.paper}>
+      <TrackChanges fontSize="large" className={classes.logo} />
+      {renderForm()}
+    </Paper>
   );
 };
 

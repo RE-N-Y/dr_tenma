@@ -1,19 +1,19 @@
 {
     "dev": {
         "awscloudformation": {
-            "AuthRoleName": "amplify-drchatbot-dev-134814-authRole",
-            "UnauthRoleArn": "arn:aws:iam::910977133571:role/amplify-drchatbot-dev-134814-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::910977133571:role/amplify-drchatbot-dev-134814-authRole",
+            "AuthRoleName": "amplify-drchatbot-dev-180525-authRole",
+            "UnauthRoleArn": "arn:aws:iam::910977133571:role/amplify-drchatbot-dev-180525-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::910977133571:role/amplify-drchatbot-dev-180525-authRole",
             "Region": "us-east-1",
-            "DeploymentBucketName": "amplify-drchatbot-dev-134814-deployment",
-            "UnauthRoleName": "amplify-drchatbot-dev-134814-unauthRole",
-            "StackName": "amplify-drchatbot-dev-134814",
-            "StackId": "arn:aws:cloudformation:us-east-1:910977133571:stack/amplify-drchatbot-dev-134814/69610bf0-c19f-11ea-9ff8-0afe492705d7",
-            "AmplifyAppId": "d1ds2gsxdugcj7"
+            "DeploymentBucketName": "amplify-drchatbot-dev-180525-deployment",
+            "UnauthRoleName": "amplify-drchatbot-dev-180525-unauthRole",
+            "StackName": "amplify-drchatbot-dev-180525",
+            "StackId": "arn:aws:cloudformation:us-east-1:910977133571:stack/amplify-drchatbot-dev-180525/81ce6aa0-c28c-11ea-9303-121b58656156",
+            "AmplifyAppId": "d1lqtanklb56dq"
         },
         "categories": {
             "auth": {
-                "drchatbot82273129": {}
+                "drchatbot8488576e": {}
             }
         }
     }
