@@ -2,18 +2,25 @@ import React, { useContext } from "react";
 import { Formik, Form, Field } from "formik";
 import { TextField } from "formik-material-ui";
 import * as yup from "yup";
-import { AuthContext, AuthState } from "../../contexts";
+import {
+  AuthStore,
+  AuthState,
+  AuthActionType,
+} from "../../contexts/authContext";
 
-import { Auth } from "@aws-amplify/auth";
+import { Auth } from "aws-amplify";
 import { Button } from "@material-ui/core";
 
 const ConfirmSignup: React.FC = () => {
-  const { setAuthState } = useContext(AuthContext);
+  const { dispatch } = useContext(AuthStore);
 
   const handleSubmit = async (values: any) => {
     try {
       await Auth.confirmSignUp(values.email, values.confirmationCode);
-      setAuthState(AuthState.SignedIn);
+      dispatch({
+        type: AuthActionType.setAuthState,
+        payload: AuthState.Signin,
+      });
     } catch (error) {
       console.log(error);
     }

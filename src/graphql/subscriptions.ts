@@ -15,6 +15,7 @@ export const onCreateStudent = /* GraphQL */ `
         soreThroat
         allergies
         bodyAches
+        temperature
         location {
           longitude
           latitude
@@ -41,6 +42,7 @@ export const onUpdateStudent = /* GraphQL */ `
         soreThroat
         allergies
         bodyAches
+        temperature
         location {
           longitude
           latitude
@@ -67,6 +69,7 @@ export const onDeleteStudent = /* GraphQL */ `
         soreThroat
         allergies
         bodyAches
+        temperature
         location {
           longitude
           latitude

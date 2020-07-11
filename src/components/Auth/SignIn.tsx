@@ -2,11 +2,15 @@ import React, { useContext } from "react";
 import { Formik, Form, Field } from "formik";
 import { TextField } from "formik-material-ui";
 import * as yup from "yup";
-import { AuthContext, AuthState } from "../../contexts";
+import {
+  AuthStore,
+  AuthState,
+  AuthActionType,
+} from "../../contexts/authContext";
 import { Box, Button, Divider, Link, Typography } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
-import { Auth } from "@aws-amplify/auth";
+import { Auth } from "aws-amplify";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,13 +24,19 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Signin: React.FC = () => {
-  const { setAuthState, setUser } = useContext(AuthContext);
+  const { state, dispatch } = useContext(AuthStore);
   const classes = useStyles();
 
   const handleSubmit = async (values: any) => {
     try {
       const user = await Auth.signIn(values.email, values.password);
-      setUser(user);
+      dispatch({ type: AuthActionType.setUser, payload: user });
+
+      if (state.authState === AuthState.CompletePassword) {
+        await Auth.completeNewPassword(user, values.password, {
+          email: values.email,
+        });
+      }
     } catch (error) {
       console.log(error);
     }
@@ -79,7 +89,10 @@ const Signin: React.FC = () => {
           <Link
             href="#"
             onClick={() => {
-              setAuthState(AuthState.SignUp);
+              dispatch({
+                type: AuthActionType.setAuthState,
+                payload: AuthState.SignUp,
+              });
             }}
           >
             Sign Up
@@ -87,7 +100,10 @@ const Signin: React.FC = () => {
           <Link
             href="#"
             onClick={() => {
-              setAuthState(AuthState.ResetPassword);
+              dispatch({
+                type: AuthActionType.setAuthState,
+                payload: AuthState.ResetPassword,
+              });
             }}
           >
             Forgot Password?
