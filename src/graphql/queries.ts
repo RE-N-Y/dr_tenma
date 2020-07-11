@@ -15,6 +15,7 @@ export const getStudent = /* GraphQL */ `
         soreThroat
         allergies
         bodyAches
+        temperature
         location {
           longitude
           latitude
@@ -46,6 +47,7 @@ export const listStudents = /* GraphQL */ `
           soreThroat
           allergies
           bodyAches
+          temperature
           note
           createdAt
         }

@@ -17,12 +17,13 @@ type Student
 }
 
 type Symptom {
-  fever: Boolean!
-  coughing: Boolean!
-  breathing: Boolean!
-  soreThroat: Boolean!
-  allergies: Boolean!
-  bodyAches: Boolean!
+  fever: Int!
+  coughing: Int!
+  breathing: Int!
+  soreThroat: Int!
+  allergies: Int!
+  bodyAches: Int!
+  temperature: Float!
   location: Location
   note: String
   createdAt: AWSDateTime!

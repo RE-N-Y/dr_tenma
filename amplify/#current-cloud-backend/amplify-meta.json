@@ -21,7 +21,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-180525-deployment/amplify-cfn-templates/auth/drchatbot8488576e-cloudformation-template.yml",
 				"logicalId": "authdrchatbot8488576e"
 			},
-			"lastPushTimeStamp": "2020-07-10T09:14:05.168Z",
+			"lastPushTimeStamp": "2020-07-11T04:32:16.541Z",
 			"output": {
 				"AppClientSecret": "71v8vk8ob0rtprdbagd8rbv7u83pra9qbulmj64u9cnvtom59u6",
 				"UserPoolId": "us-east-1_I55Tjz3zF",
@@ -55,8 +55,8 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-180525-deployment/amplify-cfn-templates/api/cloudformation-template.json",
 				"logicalId": "apidrchatbot"
 			},
-			"lastPushTimeStamp": "2020-07-10T09:14:05.168Z",
-			"lastPushDirHash": "5GQ67fWygTcMmz8uTE7cXZWPE+w="
+			"lastPushTimeStamp": "2020-07-11T04:32:21.154Z",
+			"lastPushDirHash": "8JhxkQUNwzInxrbi+u35vMey+B4="
 		}
 	}
 }
