@@ -9,10 +9,18 @@ import { Grid, LinearProgress, Paper } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { TrackChanges } from "@material-ui/icons";
 
+const unsplashURL = "https://source.unsplash.com/collection/9717149/1600x900";
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     authWrapper: {
       minHeight: "100vh",
+      backgroundImage: `url(${unsplashURL})`,
+      backgroundBlendMode: "luminosity",
+      boxShadow: "inset 0 0 0 100vw rgba(0,0,0,0.5)",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
     },
     paper: {
       width: 800,
@@ -20,6 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
+
       "& .MuiTextField-root": {
         margin: theme.spacing(1),
       },
