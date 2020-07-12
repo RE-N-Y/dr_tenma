@@ -24,7 +24,11 @@ const Geolocator: React.FC = () => {
     }
   };
 
-  return <Button onClick={getLocation}>Get Location</Button>;
+  return (
+    <Button variant="contained" onClick={getLocation}>
+      Get Location
+    </Button>
+  );
 };
 
 export default Geolocator;

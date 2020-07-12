@@ -41,7 +41,7 @@ const App: React.FC = () => {
   useEffect(() => {
     let initAuth = async () => {
       try {
-        const user = await Auth.currentUserPoolUser();
+        const user = await Auth.currentAuthenticatedUser();
         dispatch({ type: AuthActionType.setUser, payload: user });
         dispatch({
           type: AuthActionType.setAuthState,

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { lightStyle } from "./mapStyles";
 import { GeoStore } from "../../../contexts/geoContext";
