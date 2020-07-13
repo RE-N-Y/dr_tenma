@@ -2,26 +2,29 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateStudent = /* GraphQL */ `
-  subscription OnCreateStudent($owner: String) {
-    onCreateStudent(owner: $owner) {
+export const onCreatePatient = /* GraphQL */ `
+  subscription OnCreatePatient($owner: String) {
+    onCreatePatient(owner: $owner) {
       id
       name
       email
       records {
-        fever
-        coughing
-        breathing
-        soreThroat
-        allergies
-        bodyAches
-        temperature
-        location {
-          longitude
-          latitude
+        items {
+          id
+          patientID
+          fever
+          coughing
+          breathing
+          soreThroat
+          allergies
+          bodyAches
+          temperature
+          note
+          createdAt
+          updatedAt
+          owner
         }
-        note
-        createdAt
+        nextToken
       }
       createdAt
       updatedAt
@@ -29,26 +32,29 @@ export const onCreateStudent = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateStudent = /* GraphQL */ `
-  subscription OnUpdateStudent {
-    onUpdateStudent {
+export const onUpdatePatient = /* GraphQL */ `
+  subscription OnUpdatePatient {
+    onUpdatePatient {
       id
       name
       email
       records {
-        fever
-        coughing
-        breathing
-        soreThroat
-        allergies
-        bodyAches
-        temperature
-        location {
-          longitude
-          latitude
+        items {
+          id
+          patientID
+          fever
+          coughing
+          breathing
+          soreThroat
+          allergies
+          bodyAches
+          temperature
+          note
+          createdAt
+          updatedAt
+          owner
         }
-        note
-        createdAt
+        nextToken
       }
       createdAt
       updatedAt
@@ -56,27 +62,99 @@ export const onUpdateStudent = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteStudent = /* GraphQL */ `
-  subscription OnDeleteStudent {
-    onDeleteStudent {
+export const onDeletePatient = /* GraphQL */ `
+  subscription OnDeletePatient {
+    onDeletePatient {
       id
       name
       email
       records {
-        fever
-        coughing
-        breathing
-        soreThroat
-        allergies
-        bodyAches
-        temperature
-        location {
-          longitude
-          latitude
+        items {
+          id
+          patientID
+          fever
+          coughing
+          breathing
+          soreThroat
+          allergies
+          bodyAches
+          temperature
+          note
+          createdAt
+          updatedAt
+          owner
         }
-        note
-        createdAt
+        nextToken
       }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onCreateSymptom = /* GraphQL */ `
+  subscription OnCreateSymptom($owner: String) {
+    onCreateSymptom(owner: $owner) {
+      id
+      patientID
+      fever
+      coughing
+      breathing
+      soreThroat
+      allergies
+      bodyAches
+      temperature
+      location {
+        longitude
+        latitude
+      }
+      note
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateSymptom = /* GraphQL */ `
+  subscription OnUpdateSymptom {
+    onUpdateSymptom {
+      id
+      patientID
+      fever
+      coughing
+      breathing
+      soreThroat
+      allergies
+      bodyAches
+      temperature
+      location {
+        longitude
+        latitude
+      }
+      note
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteSymptom = /* GraphQL */ `
+  subscription OnDeleteSymptom {
+    onDeleteSymptom {
+      id
+      patientID
+      fever
+      coughing
+      breathing
+      soreThroat
+      allergies
+      bodyAches
+      temperature
+      location {
+        longitude
+        latitude
+      }
+      note
       createdAt
       updatedAt
       owner

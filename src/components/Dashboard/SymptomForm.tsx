@@ -4,6 +4,8 @@ import { TextField } from "formik-material-ui";
 import { Button, Slider, Typography, Paper } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import * as yup from "yup";
+import { API } from "aws-amplify";
+import * as mutations from "./../../graphql/mutations";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

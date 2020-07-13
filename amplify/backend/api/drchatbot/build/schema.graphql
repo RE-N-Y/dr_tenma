@@ -1,14 +1,16 @@
-type Student {
+type Patient {
   id: ID!
   name: String
-  email: AWSEmail
-  records: [Symptom]
+  email: AWSEmail!
+  records(filter: ModelSymptomFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelSymptomConnection
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   owner: String
 }
 
 type Symptom {
+  id: ID!
+  patientID: ID!
   fever: Int!
   coughing: Int!
   breathing: Int!
@@ -19,27 +21,11 @@ type Symptom {
   location: Location
   note: String
   createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  owner: String
 }
 
 type Location {
-  longitude: Float!
-  latitude: Float!
-}
-
-input SymptomInput {
-  fever: Int!
-  coughing: Int!
-  breathing: Int!
-  soreThroat: Int!
-  allergies: Int!
-  bodyAches: Int!
-  temperature: Float!
-  location: LocationInput
-  note: String
-  createdAt: AWSDateTime!
-}
-
-input LocationInput {
   longitude: Float!
   latitude: Float!
 }
@@ -49,8 +35,8 @@ enum ModelSortDirection {
   DESC
 }
 
-type ModelStudentConnection {
-  items: [Student]
+type ModelPatientConnection {
+  items: [Patient]
   nextToken: String
 }
 
@@ -127,13 +113,13 @@ input ModelSizeInput {
   between: [Int]
 }
 
-input ModelStudentFilterInput {
+input ModelPatientFilterInput {
   id: ModelIDInput
   name: ModelStringInput
   email: ModelStringInput
-  and: [ModelStudentFilterInput]
-  or: [ModelStudentFilterInput]
-  not: ModelStudentFilterInput
+  and: [ModelPatientFilterInput]
+  or: [ModelPatientFilterInput]
+  not: ModelPatientFilterInput
 }
 
 enum ModelAttributeTypes {
@@ -150,44 +136,127 @@ enum ModelAttributeTypes {
 }
 
 type Query {
-  getStudent(id: ID!): Student
-  listStudents(filter: ModelStudentFilterInput, limit: Int, nextToken: String): ModelStudentConnection
+  getPatient(id: ID!): Patient
+  listPatients(filter: ModelPatientFilterInput, limit: Int, nextToken: String): ModelPatientConnection
+  getSymptom(id: ID!): Symptom
+  listSymptoms(filter: ModelSymptomFilterInput, limit: Int, nextToken: String): ModelSymptomConnection
 }
 
-input CreateStudentInput {
+input CreatePatientInput {
   id: ID
   name: String
-  email: AWSEmail
-  records: [SymptomInput]
+  email: AWSEmail!
 }
 
-input UpdateStudentInput {
+input UpdatePatientInput {
   id: ID!
   name: String
   email: AWSEmail
-  records: [SymptomInput]
 }
 
-input DeleteStudentInput {
+input DeletePatientInput {
   id: ID
 }
 
 type Mutation {
-  createStudent(input: CreateStudentInput!, condition: ModelStudentConditionInput): Student
-  updateStudent(input: UpdateStudentInput!, condition: ModelStudentConditionInput): Student
-  deleteStudent(input: DeleteStudentInput!, condition: ModelStudentConditionInput): Student
+  createPatient(input: CreatePatientInput!, condition: ModelPatientConditionInput): Patient
+  updatePatient(input: UpdatePatientInput!, condition: ModelPatientConditionInput): Patient
+  deletePatient(input: DeletePatientInput!, condition: ModelPatientConditionInput): Patient
+  createSymptom(input: CreateSymptomInput!, condition: ModelSymptomConditionInput): Symptom
+  updateSymptom(input: UpdateSymptomInput!, condition: ModelSymptomConditionInput): Symptom
+  deleteSymptom(input: DeleteSymptomInput!, condition: ModelSymptomConditionInput): Symptom
 }
 
-input ModelStudentConditionInput {
+input ModelPatientConditionInput {
   name: ModelStringInput
   email: ModelStringInput
-  and: [ModelStudentConditionInput]
-  or: [ModelStudentConditionInput]
-  not: ModelStudentConditionInput
+  and: [ModelPatientConditionInput]
+  or: [ModelPatientConditionInput]
+  not: ModelPatientConditionInput
 }
 
 type Subscription {
-  onCreateStudent(owner: String): Student @aws_subscribe(mutations: ["createStudent"])
-  onUpdateStudent: Student @aws_subscribe(mutations: ["updateStudent"])
-  onDeleteStudent: Student @aws_subscribe(mutations: ["deleteStudent"])
+  onCreatePatient(owner: String): Patient @aws_subscribe(mutations: ["createPatient"])
+  onUpdatePatient: Patient @aws_subscribe(mutations: ["updatePatient"])
+  onDeletePatient: Patient @aws_subscribe(mutations: ["deletePatient"])
+  onCreateSymptom(owner: String): Symptom @aws_subscribe(mutations: ["createSymptom"])
+  onUpdateSymptom: Symptom @aws_subscribe(mutations: ["updateSymptom"])
+  onDeleteSymptom: Symptom @aws_subscribe(mutations: ["deleteSymptom"])
+}
+
+input LocationInput {
+  longitude: Float!
+  latitude: Float!
+}
+
+type ModelSymptomConnection {
+  items: [Symptom]
+  nextToken: String
+}
+
+input ModelSymptomFilterInput {
+  id: ModelIDInput
+  patientID: ModelIDInput
+  fever: ModelIntInput
+  coughing: ModelIntInput
+  breathing: ModelIntInput
+  soreThroat: ModelIntInput
+  allergies: ModelIntInput
+  bodyAches: ModelIntInput
+  temperature: ModelFloatInput
+  note: ModelStringInput
+  createdAt: ModelStringInput
+  and: [ModelSymptomFilterInput]
+  or: [ModelSymptomFilterInput]
+  not: ModelSymptomFilterInput
+}
+
+input CreateSymptomInput {
+  id: ID
+  patientID: ID!
+  fever: Int!
+  coughing: Int!
+  breathing: Int!
+  soreThroat: Int!
+  allergies: Int!
+  bodyAches: Int!
+  temperature: Float!
+  location: LocationInput
+  note: String
+  createdAt: AWSDateTime
+}
+
+input UpdateSymptomInput {
+  id: ID!
+  patientID: ID
+  fever: Int
+  coughing: Int
+  breathing: Int
+  soreThroat: Int
+  allergies: Int
+  bodyAches: Int
+  temperature: Float
+  location: LocationInput
+  note: String
+  createdAt: AWSDateTime
+}
+
+input DeleteSymptomInput {
+  id: ID
+}
+
+input ModelSymptomConditionInput {
+  patientID: ModelIDInput
+  fever: ModelIntInput
+  coughing: ModelIntInput
+  breathing: ModelIntInput
+  soreThroat: ModelIntInput
+  allergies: ModelIntInput
+  bodyAches: ModelIntInput
+  temperature: ModelFloatInput
+  note: ModelStringInput
+  createdAt: ModelStringInput
+  and: [ModelSymptomConditionInput]
+  or: [ModelSymptomConditionInput]
+  not: ModelSymptomConditionInput
 }

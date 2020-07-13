@@ -1,4 +1,4 @@
-type Student
+type Patient
   @model
   @auth(
     rules: [
@@ -12,11 +12,25 @@ type Student
   ) {
   id: ID!
   name: String
-  email: AWSEmail
-  records: [Symptom]
+  email: AWSEmail!
+  records: [Symptom] @connection(keyName: "byPatient", fields: ["id"])
 }
 
-type Symptom {
+type Symptom
+  @model
+  @key(name: "byPatient", fields: ["patientID"])
+  @auth(
+    rules: [
+      {
+        allow: groups
+        groups: ["admin", "manager"]
+        operations: [create, update, delete, read]
+      }
+      { allow: owner, operations: [create, read] }
+    ]
+  ) {
+  id: ID!
+  patientID: ID!
   fever: Int!
   coughing: Int!
   breathing: Int!
