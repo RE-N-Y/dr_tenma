@@ -3,6 +3,7 @@ import React, { createContext, useReducer } from "react";
 interface GeoContext {
   longitude: number;
   latitude: number;
+  isLoactionOn: boolean;
 }
 
 export enum GeoActionType {
@@ -20,6 +21,7 @@ type GeoAction = SetLocationAction;
 const initGeoContext: GeoContext = {
   longitude: 139.7745,
   latitude: 35.7023,
+  isLoactionOn: false,
 };
 
 const geoReducer = (state = initGeoContext, action: GeoAction): GeoContext => {
@@ -29,6 +31,7 @@ const geoReducer = (state = initGeoContext, action: GeoAction): GeoContext => {
         ...state,
         longitude: action.longitude,
         latitude: action.latitude,
+        isLoactionOn: true,
       };
     default:
       return state;

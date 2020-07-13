@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Formik, Form, Field } from "formik";
 import { TextField } from "formik-material-ui";
 import { Button, Slider, Typography, Paper } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import * as yup from "yup";
-import { API } from "aws-amplify";
+import { API, graphqlOperation } from "aws-amplify";
 import * as mutations from "./../../graphql/mutations";
+import { GeoStore } from "../../contexts/geoContext";
+import { AuthStore } from "../../contexts/authContext";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -29,6 +31,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const SymptomForm: React.FC = () => {
   const classes = useStyles();
+  const geoContext = useContext(GeoStore);
+  const authContext = useContext(AuthStore);
+
   const symptomValidtion = yup
     .number()
     .integer()
@@ -45,22 +50,61 @@ const SymptomForm: React.FC = () => {
       soreThroat: symptomValidtion,
       allergies: symptomValidtion,
       bodyAches: symptomValidtion,
-      location: yup.object({
-        longitude: yup.number(),
-        latitude: yup.number(),
-      }),
-      createdAt: yup.string().defined().required(),
+      temperature: yup
+        .number()
+        .min(20)
+        .max(50)
+        .required("Please record your body tempreature"),
       note: yup.string(),
     })
     .defined();
 
-  const handleSubmit = (values: any) => {};
+  const handleSubmit = async (values: any) => {
+    let symptomInput = {
+      ...values,
+      patientID: authContext.state.user.username,
+    };
+
+    if (geoContext.state.isLoactionOn) {
+      symptomInput["location"] = {
+        longitude: geoContext.state.longitude,
+        latitude: geoContext.state.latitude,
+      };
+    }
+    try {
+      await API.graphql(
+        graphqlOperation(mutations.createSymptom, { input: symptomInput })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const SliderDefaultProps = {
     marks: [1, 2, 3, 4, 5].map((num) => ({ value: num, label: `${num}` })),
     min: 1,
     max: 5,
   };
+
+  const temperatureMarks = [
+    {
+      value: 20,
+      label: "20°C",
+    },
+    { value: 30, label: "30°C" },
+    {
+      value: 36,
+      label: "36.5°C",
+    },
+    {
+      value: 39,
+      label: "39°C",
+    },
+    {
+      value: 50,
+      label: "50°C",
+    },
+  ];
 
   return (
     <Paper>
@@ -72,14 +116,13 @@ const SymptomForm: React.FC = () => {
           soreThroat: 3,
           allergies: 3,
           bodyAches: 3,
-          location: undefined,
-          createdAt: new Date().toISOString(),
+          temperature: 36.5,
           note: "",
         }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting, values, setFieldValue }) => {
+        {({ isSubmitting, values, errors, setFieldValue }) => {
           return (
             <Form className={classes.form}>
               <Typography variant="h6" className={classes.title}>
@@ -92,6 +135,7 @@ const SymptomForm: React.FC = () => {
                   setFieldValue("fever", value);
                 }}
                 value={values.fever}
+                valueLabelDisplay="auto"
                 {...SliderDefaultProps}
               />
               <Typography variant="subtitle1">Coughing</Typography>
@@ -101,6 +145,7 @@ const SymptomForm: React.FC = () => {
                   setFieldValue("coughing", value);
                 }}
                 value={values.coughing}
+                valueLabelDisplay="auto"
                 {...SliderDefaultProps}
               />
               <Typography variant="subtitle1">Breathing</Typography>
@@ -110,6 +155,7 @@ const SymptomForm: React.FC = () => {
                   setFieldValue("breathing", value);
                 }}
                 value={values.breathing}
+                valueLabelDisplay="auto"
                 {...SliderDefaultProps}
               />
               <Typography variant="subtitle1">Sore Throat</Typography>
@@ -119,6 +165,7 @@ const SymptomForm: React.FC = () => {
                   setFieldValue("soreThroat", value);
                 }}
                 value={values.soreThroat}
+                valueLabelDisplay="auto"
                 {...SliderDefaultProps}
               />
               <Typography variant="subtitle1">Allergy</Typography>
@@ -128,6 +175,7 @@ const SymptomForm: React.FC = () => {
                   setFieldValue("allergies", value);
                 }}
                 value={values.allergies}
+                valueLabelDisplay="auto"
                 {...SliderDefaultProps}
               />
               <Typography variant="subtitle1">Aching Body</Typography>
@@ -137,7 +185,21 @@ const SymptomForm: React.FC = () => {
                   setFieldValue("bodyAches", value);
                 }}
                 value={values.bodyAches}
+                valueLabelDisplay="auto"
                 {...SliderDefaultProps}
+              />
+              <Typography variant="subtitle1">Body Temperature</Typography>
+              <Slider
+                name="temperature"
+                onChange={(event, value) => {
+                  setFieldValue("temperature", value);
+                }}
+                valueLabelDisplay="auto"
+                value={values.temperature}
+                min={20}
+                max={50}
+                step={0.1}
+                marks={temperatureMarks}
               />
               <Field
                 name="note"

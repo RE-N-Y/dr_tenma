@@ -1,9 +1,8 @@
 import React from "react";
-import { Container } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Appbar from "./../Appbar";
 import SymptomForm from "./SymptomForm";
-import Geolocator from "../Geolocator";
 import Map from "./Map/Map";
 import { GeoProvider } from "../../contexts/geoContext";
 
@@ -16,8 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
       overflow: "auto",
     },
     container: {
-      paddingTop: theme.spacing(4),
-      paddingBottom: theme.spacing(4),
+      padding: theme.spacing(4, 6),
     },
   })
 );
@@ -30,11 +28,14 @@ const Dashboard = () => {
       <Appbar />
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <Container maxWidth="lg" className={classes.container}>
-          <SymptomForm />
-          <Geolocator />
-          <Map />
-        </Container>
+        <Grid className={classes.container} container spacing={3}>
+          <Grid item xs={8}>
+            <Map />
+          </Grid>
+          <Grid item xs={4}>
+            <SymptomForm />
+          </Grid>
+        </Grid>
       </main>
     </GeoProvider>
   );

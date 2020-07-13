@@ -1,8 +1,18 @@
 import React, { useContext } from "react";
-import { AuthState, AuthStore } from "../contexts/authContext";
-import { AppBar, Avatar, Button, Toolbar, Typography } from "@material-ui/core";
+import { AuthStore } from "../contexts/authContext";
+import {
+  AppBar,
+  Avatar,
+  Button,
+  IconButton,
+  Toolbar,
+  Typography,
+  Popover,
+} from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { Auth } from "aws-amplify";
+import { TrackChanges } from "@material-ui/icons";
+import Geolocator from "./Geolocator";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -14,6 +24,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {
       flexGrow: 1,
+    },
+    logo: {
+      marginRight: theme.spacing(2),
     },
   })
 );
@@ -37,16 +50,52 @@ const Appbar: React.FC = () => {
   const { state } = useContext(AuthStore);
   const classes = useStyles();
 
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
+    null
+  );
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
+
   return (
     <AppBar position="absolute">
       <Toolbar>
-        <Avatar className={classes.avatar}>
-          {state.user?.attributes?.email[0].toUpperCase()}
-        </Avatar>
+        <TrackChanges className={classes.logo} fontSize="large" />
         <Typography variant="h6" className={classes.title}>
-          Dr. Tenma
+          DR. TENMA
         </Typography>
-        {state.user && state.authState === AuthState.SignedIn && <Signout />}
+
+        <IconButton onClick={handleClick}>
+          <Avatar className={classes.avatar}>
+            {state.user?.attributes?.email[0].toUpperCase()}
+          </Avatar>
+        </IconButton>
+
+        <Popover
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+        >
+          <Signout />
+        </Popover>
+        <Geolocator />
       </Toolbar>
     </AppBar>
   );
