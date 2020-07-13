@@ -17,6 +17,9 @@ const Geolocator: React.FC = () => {
         },
         (error) => {
           console.log(error);
+        },
+        {
+          enableHighAccuracy: true,
         }
       );
     } else {
