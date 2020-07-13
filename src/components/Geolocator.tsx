@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Button } from "@material-ui/core";
 import { GeoStore, GeoActionType } from "../contexts/geoContext";
+import { LocationOn } from "@material-ui/icons";
 
 const Geolocator: React.FC = () => {
   const { dispatch } = useContext(GeoStore);
@@ -28,7 +29,11 @@ const Geolocator: React.FC = () => {
   };
 
   return (
-    <Button variant="contained" onClick={getLocation}>
+    <Button
+      variant="contained"
+      startIcon={<LocationOn />}
+      onClick={getLocation}
+    >
       Get Location
     </Button>
   );

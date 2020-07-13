@@ -117,6 +117,51 @@
 				}
 			}
 		},
+		"authuserPoolGroups": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-180525-deployment/amplify-cfn-templates/auth/template.json",
+				"Parameters": {
+					"AuthRoleArn": {
+						"Fn::GetAtt": [
+							"AuthRole",
+							"Arn"
+						]
+					},
+					"UnauthRoleArn": {
+						"Fn::GetAtt": [
+							"UnauthRole",
+							"Arn"
+						]
+					},
+					"authdrchatbot8488576eUserPoolId": {
+						"Fn::GetAtt": [
+							"authdrchatbot8488576e",
+							"Outputs.UserPoolId"
+						]
+					},
+					"authdrchatbot8488576eAppClientIDWeb": {
+						"Fn::GetAtt": [
+							"authdrchatbot8488576e",
+							"Outputs.AppClientIDWeb"
+						]
+					},
+					"authdrchatbot8488576eAppClientID": {
+						"Fn::GetAtt": [
+							"authdrchatbot8488576e",
+							"Outputs.AppClientID"
+						]
+					},
+					"authdrchatbot8488576eIdentityPoolId": {
+						"Fn::GetAtt": [
+							"authdrchatbot8488576e",
+							"Outputs.IdentityPoolId"
+						]
+					},
+					"env": "dev"
+				}
+			}
+		},
 		"apidrchatbot": {
 			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {

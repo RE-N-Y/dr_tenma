@@ -14,7 +14,7 @@ export enum AuthState {
 interface AuthContext {
   user: any | undefined;
   authState: AuthState;
-  signupInput: { email: string; password?: string } | undefined;
+  signupInput: { email?: string; password?: string } | undefined;
 }
 
 export enum AuthActionType {
@@ -50,7 +50,6 @@ const authReducer = (
   state = initAuthContext,
   action: AuthAction
 ): AuthContext => {
-  console.log({ state, action });
   switch (action.type) {
     case AuthActionType.setUser:
       return { ...state, user: action.payload };

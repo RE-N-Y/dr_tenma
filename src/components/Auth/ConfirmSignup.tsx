@@ -10,21 +10,24 @@ import {
 
 import { Auth, API, graphqlOperation } from "aws-amplify";
 import * as mutations from "./../../graphql/mutations";
-import { Button, Link } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 
 const ConfirmSignup: React.FC = () => {
   const { state, dispatch } = useContext(AuthStore);
 
   const handleSubmit = async (values: any) => {
     try {
-      await Auth.confirmSignUp(values.email, values.confirmationCode);
-      await Auth.signIn(values.email, values.password);
+      let email = state.signupInput?.email as string;
+      let password = state.signupInput?.password as string;
+
+      await Auth.confirmSignUp(email, values.confirmationCode);
+      await Auth.signIn(email, password);
 
       const { username } = await Auth.currentUserInfo();
 
       await API.graphql(
         graphqlOperation(mutations.createPatient, {
-          input: { id: username, email: values.email },
+          input: { id: username, email: email },
         })
       );
 
@@ -43,8 +46,6 @@ const ConfirmSignup: React.FC = () => {
   };
 
   const validationSchema = yup.object({
-    email: yup.string().email().required("Please enter your signup email"),
-    password: yup.string().required("Please enter your password"),
     confirmationCode: yup
       .string()
       .required("Please enter your confirmation code"),
@@ -53,30 +54,13 @@ const ConfirmSignup: React.FC = () => {
   return (
     <Formik
       initialValues={{
-        email: state.signupInput?.email,
         confirmationCode: "",
-        password: state.signupInput?.password,
       }}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
       {({ isSubmitting }) => (
         <Form>
-          <Field
-            name="email"
-            label="Email"
-            fullWidth
-            disabled
-            component={TextField}
-          />
-          <Field
-            name="password"
-            type="password"
-            label="Password"
-            fullWidth
-            disabled
-            component={TextField}
-          />
           <Field
             name="confirmationCode"
             label="Confirmation Code"
