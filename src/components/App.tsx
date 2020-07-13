@@ -1,13 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { AuthState, AuthStore, AuthActionType } from "../contexts/authContext";
 import { CssBaseline } from "@material-ui/core";
-import {
-  createStyles,
-  makeStyles,
-  createMuiTheme,
-  Theme,
-} from "@material-ui/core/styles";
-import { indigo, yellow } from "@material-ui/core/colors";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Authenticator from "./Auth/Authenticator";
 import Dashboard from "./Dashboard/Dashboard";
 
@@ -24,17 +18,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const App: React.FC = () => {
   const { state, dispatch } = useContext(AuthStore);
-
-  const theme = createMuiTheme({
-    palette: {
-      primary: {
-        main: indigo[900],
-      },
-      secondary: {
-        main: yellow[400],
-      },
-    },
-  });
 
   const classes = useStyles();
 

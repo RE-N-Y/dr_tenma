@@ -2,7 +2,7 @@ import React, { createContext, useReducer } from "react";
 
 export enum AuthState {
   Signin = "Signin",
-  SignedIn = "SingedIn",
+  SignedIn = "SignedIn",
   SignUp = "SignUp",
   ConfirmSignUp = "ConfirmSignUp",
   ResetPassword = "ResetPassword",
@@ -14,11 +14,13 @@ export enum AuthState {
 interface AuthContext {
   user: any | undefined;
   authState: AuthState;
+  signupInput: { email: string; password?: string } | undefined;
 }
 
 export enum AuthActionType {
   setUser = "setUser",
   setAuthState = "setAuthState",
+  setSignupInput = "setSignupInput",
 }
 
 interface SetUserAction {
@@ -31,11 +33,17 @@ interface SetAuthStateAction {
   payload: AuthState;
 }
 
-type AuthAction = SetUserAction | SetAuthStateAction;
+interface SetSignupInputAction {
+  type: typeof AuthActionType.setSignupInput;
+  payload: { email?: string; password?: string } | undefined;
+}
+
+type AuthAction = SetUserAction | SetAuthStateAction | SetSignupInputAction;
 
 const initAuthContext: AuthContext = {
   user: undefined,
   authState: AuthState.Signin,
+  signupInput: undefined,
 };
 
 const authReducer = (
@@ -48,6 +56,8 @@ const authReducer = (
       return { ...state, user: action.payload };
     case AuthActionType.setAuthState:
       return { ...state, authState: action.payload };
+    case AuthActionType.setSignupInput:
+      return { ...state, signupInput: action.payload };
     default:
       return state;
   }

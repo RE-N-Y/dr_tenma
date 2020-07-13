@@ -4,8 +4,11 @@ import { TextField } from "formik-material-ui";
 import { Button, Typography } from "@material-ui/core";
 import * as yup from "yup";
 import { Auth } from "aws-amplify";
+import { AuthStore, AuthActionType } from "../../contexts/authContext";
 
 const Signup: React.FC = () => {
+  const { dispatch } = useContext(AuthStore);
+
   const handleSubmit = async (values: any) => {
     try {
       await Auth.signUp({
@@ -14,6 +17,10 @@ const Signup: React.FC = () => {
         attributes: {
           email: values.email,
         },
+      });
+      dispatch({
+        type: AuthActionType.setSignupInput,
+        payload: { email: values.email, password: values.password },
       });
     } catch (error) {
       console.log(error);

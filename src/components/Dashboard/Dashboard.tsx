@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Container } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Appbar from "./../Appbar";
