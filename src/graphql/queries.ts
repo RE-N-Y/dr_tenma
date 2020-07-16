@@ -32,6 +32,30 @@ export const getPatient = /* GraphQL */ `
     }
   }
 `;
+
+export const getSymptomSeries = /* GraphQL */ `
+  query GetPatient($id: ID!) {
+    getPatient(id: $id) {
+      records {
+        items {
+          fever
+          coughing
+          breathing
+          soreThroat
+          allergies
+          bodyAches
+          temperature
+          location {
+            longitude
+            latitude
+          }
+          updatedAt
+        }
+      }
+    }
+  }
+`;
+
 export const listPatients = /* GraphQL */ `
   query ListPatients(
     $filter: ModelPatientFilterInput
@@ -54,6 +78,7 @@ export const listPatients = /* GraphQL */ `
     }
   }
 `;
+
 export const getSymptom = /* GraphQL */ `
   query GetSymptom($id: ID!) {
     getSymptom(id: $id) {
@@ -77,6 +102,7 @@ export const getSymptom = /* GraphQL */ `
     }
   }
 `;
+
 export const listSymptoms = /* GraphQL */ `
   query ListSymptoms(
     $filter: ModelSymptomFilterInput

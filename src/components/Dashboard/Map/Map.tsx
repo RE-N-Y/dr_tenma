@@ -1,18 +1,51 @@
 import React, { useContext } from "react";
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  LoadScript,
+  Marker,
+  MarkerClusterer,
+  HeatmapLayer,
+} from "@react-google-maps/api";
 import { lightStyle } from "./mapStyles";
 import { GeoStore } from "../../../contexts/geoContext";
+import { LocationInput } from "../../../API";
 
-const Map: React.FC = () => {
+interface MapProps {
+  movements: { location: LocationInput; updatedAt: string }[];
+  useHeatmap: boolean;
+  useCluster: boolean;
+}
+
+const libs = ["visualization"];
+
+const Map: React.FC<MapProps> = ({ movements, useCluster, useHeatmap }) => {
   const { state } = useContext(GeoStore);
+  let global: any = window;
 
   const mapContainerStyle = {
-    height: "100vh",
+    height: "100%",
     width: "100%",
   };
 
+  let filteredMoves = movements.filter((movement) => movement.location);
+
+  const locations = filteredMoves.map((movement) => ({
+    lat: movement.location.latitude,
+    lng: movement.location.longitude,
+  }));
+
+  const heatmapLocations = filteredMoves.map((movement) => {
+    return new global.google.maps.LatLng(
+      movement.location.latitude,
+      movement.location.longitude
+    );
+  });
+
   return (
-    <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAP_API_KEY}>
+    <LoadScript
+      googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAP_API_KEY}
+      libraries={libs}
+    >
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
         zoom={13}
@@ -28,6 +61,16 @@ const Map: React.FC = () => {
             lng: state.longitude,
           }}
         />
+        {useCluster && (
+          <MarkerClusterer>
+            {(clusterer) =>
+              locations.map((location, index) => (
+                <Marker key={index} position={location} clusterer={clusterer} />
+              ))
+            }
+          </MarkerClusterer>
+        )}
+        {useHeatmap && <HeatmapLayer data={heatmapLocations} />}
       </GoogleMap>
     </LoadScript>
   );
