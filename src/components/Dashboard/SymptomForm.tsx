@@ -59,7 +59,7 @@ const SymptomForm: React.FC = () => {
     })
     .defined();
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: any, { resetForm }: any) => {
     let symptomInput = {
       ...values,
       patientID: authContext.state.user.username,
@@ -75,6 +75,8 @@ const SymptomForm: React.FC = () => {
       await API.graphql(
         graphqlOperation(mutations.createSymptom, { input: symptomInput })
       );
+
+      resetForm();
     } catch (error) {
       console.log(error);
     }
@@ -122,7 +124,7 @@ const SymptomForm: React.FC = () => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting, values, errors, setFieldValue }) => {
+        {({ isSubmitting, values, setFieldValue }) => {
           return (
             <Form className={classes.form}>
               <Typography variant="h6" className={classes.title}>

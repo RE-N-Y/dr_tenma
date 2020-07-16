@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Grid } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Appbar from "./../Appbar";
-import SymptomForm from "./SymptomForm";
-import Map from "./Map/Map";
+import MapPanel from "./Map/MapPanel";
 import { GeoProvider } from "../../contexts/geoContext";
+import SymptomForm from "./SymptomForm";
+import SymptomTrend from "./data/SymptomTrend";
+import { API, graphqlOperation } from "aws-amplify";
+import * as queries from "./../../graphql/queries";
+import { AuthStore } from "../../contexts/authContext";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -22,15 +26,69 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Dashboard = () => {
   const classes = useStyles();
+  const { state } = useContext(AuthStore);
+  const [symptomSeries, setsymptomSeries] = useState<any>([]);
+
+  useEffect(() => {
+    let fetchSymptomSeries = async (username: string) => {
+      try {
+        const { data }: any = await API.graphql(
+          graphqlOperation(queries.getSymptomSeries, { id: username })
+        );
+
+        setsymptomSeries(data.getPatient.records.items);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchSymptomSeries(state.user.username);
+  }, [state.user.username]);
 
   return (
     <GeoProvider>
       <Appbar />
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <Grid className={classes.container} container spacing={3}>
+        <Grid className={classes.container} container spacing={2}>
+          <Grid container item spacing={2}>
+            <Grid item xs={3}>
+              <SymptomTrend
+                title="Fever"
+                symptom="fever"
+                color="#004c6d"
+                data={symptomSeries}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <SymptomTrend
+                title="Coughing"
+                symptom="coughing"
+                color="#427ba0"
+                data={symptomSeries}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <SymptomTrend
+                title="Breathing"
+                symptom="breathing"
+                color="#5b93bb"
+                data={symptomSeries}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <SymptomTrend
+                title="Body Temperature"
+                symptom="temperature"
+                color="#74add6"
+                data={symptomSeries}
+              />
+            </Grid>
+          </Grid>
           <Grid item xs={8}>
-            <Map />
+            <MapPanel
+              mapProps={{ movements: symptomSeries, useHeatmap: true }}
+            />
           </Grid>
           <Grid item xs={4}>
             <SymptomForm />
