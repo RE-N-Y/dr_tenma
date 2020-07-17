@@ -18,6 +18,9 @@ type Patient
 
 type Symptom
   @model
+  @searchable
+  @key(name: "bySeverity", fields: ["severity"])
+  @key(name: "byTime", fields: ["createdAt"])
   @key(name: "byPatient", fields: ["patientID"])
   @auth(
     rules: [
@@ -38,12 +41,40 @@ type Symptom
   allergies: Int!
   bodyAches: Int!
   temperature: Float!
+  severity: Severity!
   location: Location
   note: String
   createdAt: AWSDateTime!
 }
 
+type Query {
+  nearbySymptoms(
+    location: LocationInput!
+    m: Int
+    limit: Int
+    nextToken: String
+  ): ModelSymptomConnection
+}
+
+input LocationInput {
+  lat: Float!
+  lon: Float!
+}
+
+type ModelSymptomConnection {
+  items: [Symptom]
+  total: Int
+  nextToken: String
+}
+
+enum Severity {
+  SAFE
+  WATCH
+  ALERT
+  WARNING
+}
+
 type Location {
-  longitude: Float!
-  latitude: Float!
+  lat: Float!
+  lon: Float!
 }

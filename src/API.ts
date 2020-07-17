@@ -56,6 +56,14 @@ export type ModelSizeInput = {
   between?: Array< number | null > | null,
 };
 
+export enum Severity {
+  SAFE = "SAFE",
+  WATCH = "WATCH",
+  ALERT = "ALERT",
+  WARNING = "WARNING",
+}
+
+
 export type UpdatePatientInput = {
   id: string,
   name?: string | null,
@@ -76,14 +84,15 @@ export type CreateSymptomInput = {
   allergies: number,
   bodyAches: number,
   temperature: number,
+  severity: Severity,
   location?: LocationInput | null,
   note?: string | null,
   createdAt?: string | null,
 };
 
 export type LocationInput = {
-  longitude: number,
-  latitude: number,
+  lat: number,
+  lon: number,
 };
 
 export type ModelSymptomConditionInput = {
@@ -95,6 +104,7 @@ export type ModelSymptomConditionInput = {
   allergies?: ModelIntInput | null,
   bodyAches?: ModelIntInput | null,
   temperature?: ModelFloatInput | null,
+  severity?: ModelSeverityInput | null,
   note?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
   and?: Array< ModelSymptomConditionInput | null > | null,
@@ -142,6 +152,11 @@ export type ModelFloatInput = {
   attributeType?: ModelAttributeTypes | null,
 };
 
+export type ModelSeverityInput = {
+  eq?: Severity | null,
+  ne?: Severity | null,
+};
+
 export type UpdateSymptomInput = {
   id: string,
   patientID?: string | null,
@@ -152,6 +167,7 @@ export type UpdateSymptomInput = {
   allergies?: number | null,
   bodyAches?: number | null,
   temperature?: number | null,
+  severity?: Severity | null,
   location?: LocationInput | null,
   note?: string | null,
   createdAt?: string | null,
@@ -180,12 +196,108 @@ export type ModelSymptomFilterInput = {
   allergies?: ModelIntInput | null,
   bodyAches?: ModelIntInput | null,
   temperature?: ModelFloatInput | null,
+  severity?: ModelSeverityInput | null,
   note?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
   and?: Array< ModelSymptomFilterInput | null > | null,
   or?: Array< ModelSymptomFilterInput | null > | null,
   not?: ModelSymptomFilterInput | null,
 };
+
+export type SearchableSymptomFilterInput = {
+  id?: SearchableIDFilterInput | null,
+  patientID?: SearchableIDFilterInput | null,
+  fever?: SearchableIntFilterInput | null,
+  coughing?: SearchableIntFilterInput | null,
+  breathing?: SearchableIntFilterInput | null,
+  soreThroat?: SearchableIntFilterInput | null,
+  allergies?: SearchableIntFilterInput | null,
+  bodyAches?: SearchableIntFilterInput | null,
+  temperature?: SearchableFloatFilterInput | null,
+  note?: SearchableStringFilterInput | null,
+  createdAt?: SearchableStringFilterInput | null,
+  and?: Array< SearchableSymptomFilterInput | null > | null,
+  or?: Array< SearchableSymptomFilterInput | null > | null,
+  not?: SearchableSymptomFilterInput | null,
+};
+
+export type SearchableIDFilterInput = {
+  ne?: string | null,
+  gt?: string | null,
+  lt?: string | null,
+  gte?: string | null,
+  lte?: string | null,
+  eq?: string | null,
+  match?: string | null,
+  matchPhrase?: string | null,
+  matchPhrasePrefix?: string | null,
+  multiMatch?: string | null,
+  exists?: boolean | null,
+  wildcard?: string | null,
+  regexp?: string | null,
+};
+
+export type SearchableIntFilterInput = {
+  ne?: number | null,
+  gt?: number | null,
+  lt?: number | null,
+  gte?: number | null,
+  lte?: number | null,
+  eq?: number | null,
+  range?: Array< number | null > | null,
+};
+
+export type SearchableFloatFilterInput = {
+  ne?: number | null,
+  gt?: number | null,
+  lt?: number | null,
+  gte?: number | null,
+  lte?: number | null,
+  eq?: number | null,
+  range?: Array< number | null > | null,
+};
+
+export type SearchableStringFilterInput = {
+  ne?: string | null,
+  gt?: string | null,
+  lt?: string | null,
+  gte?: string | null,
+  lte?: string | null,
+  eq?: string | null,
+  match?: string | null,
+  matchPhrase?: string | null,
+  matchPhrasePrefix?: string | null,
+  multiMatch?: string | null,
+  exists?: boolean | null,
+  wildcard?: string | null,
+  regexp?: string | null,
+};
+
+export type SearchableSymptomSortInput = {
+  field?: SearchableSymptomSortableFields | null,
+  direction?: SearchableSortDirection | null,
+};
+
+export enum SearchableSymptomSortableFields {
+  id = "id",
+  patientID = "patientID",
+  fever = "fever",
+  coughing = "coughing",
+  breathing = "breathing",
+  soreThroat = "soreThroat",
+  allergies = "allergies",
+  bodyAches = "bodyAches",
+  temperature = "temperature",
+  note = "note",
+  createdAt = "createdAt",
+}
+
+
+export enum SearchableSortDirection {
+  asc = "asc",
+  desc = "desc",
+}
+
 
 export type CreatePatientMutationVariables = {
   input: CreatePatientInput,
@@ -211,11 +323,13 @@ export type CreatePatientMutation = {
         allergies: number,
         bodyAches: number,
         temperature: number,
+        severity: Severity,
         note: string | null,
         createdAt: string,
         updatedAt: string,
         owner: string | null,
       } | null > | null,
+      total: number | null,
       nextToken: string | null,
     } | null,
     createdAt: string,
@@ -248,11 +362,13 @@ export type UpdatePatientMutation = {
         allergies: number,
         bodyAches: number,
         temperature: number,
+        severity: Severity,
         note: string | null,
         createdAt: string,
         updatedAt: string,
         owner: string | null,
       } | null > | null,
+      total: number | null,
       nextToken: string | null,
     } | null,
     createdAt: string,
@@ -285,11 +401,13 @@ export type DeletePatientMutation = {
         allergies: number,
         bodyAches: number,
         temperature: number,
+        severity: Severity,
         note: string | null,
         createdAt: string,
         updatedAt: string,
         owner: string | null,
       } | null > | null,
+      total: number | null,
       nextToken: string | null,
     } | null,
     createdAt: string,
@@ -315,10 +433,11 @@ export type CreateSymptomMutation = {
     allergies: number,
     bodyAches: number,
     temperature: number,
+    severity: Severity,
     location:  {
       __typename: "Location",
-      longitude: number,
-      latitude: number,
+      lat: number,
+      lon: number,
     } | null,
     note: string | null,
     createdAt: string,
@@ -344,10 +463,11 @@ export type UpdateSymptomMutation = {
     allergies: number,
     bodyAches: number,
     temperature: number,
+    severity: Severity,
     location:  {
       __typename: "Location",
-      longitude: number,
-      latitude: number,
+      lat: number,
+      lon: number,
     } | null,
     note: string | null,
     createdAt: string,
@@ -373,15 +493,53 @@ export type DeleteSymptomMutation = {
     allergies: number,
     bodyAches: number,
     temperature: number,
+    severity: Severity,
     location:  {
       __typename: "Location",
-      longitude: number,
-      latitude: number,
+      lat: number,
+      lon: number,
     } | null,
     note: string | null,
     createdAt: string,
     updatedAt: string,
     owner: string | null,
+  } | null,
+};
+
+export type NearbySymptomsQueryVariables = {
+  location: LocationInput,
+  m?: number | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type NearbySymptomsQuery = {
+  nearbySymptoms:  {
+    __typename: "ModelSymptomConnection",
+    items:  Array< {
+      __typename: "Symptom",
+      id: string,
+      patientID: string,
+      fever: number,
+      coughing: number,
+      breathing: number,
+      soreThroat: number,
+      allergies: number,
+      bodyAches: number,
+      temperature: number,
+      severity: Severity,
+      location:  {
+        __typename: "Location",
+        lat: number,
+        lon: number,
+      } | null,
+      note: string | null,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null > | null,
+    total: number | null,
+    nextToken: string | null,
   } | null,
 };
 
@@ -408,11 +566,13 @@ export type GetPatientQuery = {
         allergies: number,
         bodyAches: number,
         temperature: number,
+        severity: Severity,
         note: string | null,
         createdAt: string,
         updatedAt: string,
         owner: string | null,
       } | null > | null,
+      total: number | null,
       nextToken: string | null,
     } | null,
     createdAt: string,
@@ -437,6 +597,7 @@ export type ListPatientsQuery = {
       email: string,
       records:  {
         __typename: "ModelSymptomConnection",
+        total: number | null,
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -463,10 +624,11 @@ export type GetSymptomQuery = {
     allergies: number,
     bodyAches: number,
     temperature: number,
+    severity: Severity,
     location:  {
       __typename: "Location",
-      longitude: number,
-      latitude: number,
+      lat: number,
+      lon: number,
     } | null,
     note: string | null,
     createdAt: string,
@@ -495,10 +657,48 @@ export type ListSymptomsQuery = {
       allergies: number,
       bodyAches: number,
       temperature: number,
+      severity: Severity,
       location:  {
         __typename: "Location",
-        longitude: number,
-        latitude: number,
+        lat: number,
+        lon: number,
+      } | null,
+      note: string | null,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null > | null,
+    total: number | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type SearchSymptomsQueryVariables = {
+  filter?: SearchableSymptomFilterInput | null,
+  sort?: SearchableSymptomSortInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type SearchSymptomsQuery = {
+  searchSymptoms:  {
+    __typename: "SearchableSymptomConnection",
+    items:  Array< {
+      __typename: "Symptom",
+      id: string,
+      patientID: string,
+      fever: number,
+      coughing: number,
+      breathing: number,
+      soreThroat: number,
+      allergies: number,
+      bodyAches: number,
+      temperature: number,
+      severity: Severity,
+      location:  {
+        __typename: "Location",
+        lat: number,
+        lon: number,
       } | null,
       note: string | null,
       createdAt: string,
@@ -506,6 +706,7 @@ export type ListSymptomsQuery = {
       owner: string | null,
     } | null > | null,
     nextToken: string | null,
+    total: number | null,
   } | null,
 };
 
@@ -532,11 +733,13 @@ export type OnCreatePatientSubscription = {
         allergies: number,
         bodyAches: number,
         temperature: number,
+        severity: Severity,
         note: string | null,
         createdAt: string,
         updatedAt: string,
         owner: string | null,
       } | null > | null,
+      total: number | null,
       nextToken: string | null,
     } | null,
     createdAt: string,
@@ -564,11 +767,13 @@ export type OnUpdatePatientSubscription = {
         allergies: number,
         bodyAches: number,
         temperature: number,
+        severity: Severity,
         note: string | null,
         createdAt: string,
         updatedAt: string,
         owner: string | null,
       } | null > | null,
+      total: number | null,
       nextToken: string | null,
     } | null,
     createdAt: string,
@@ -596,11 +801,13 @@ export type OnDeletePatientSubscription = {
         allergies: number,
         bodyAches: number,
         temperature: number,
+        severity: Severity,
         note: string | null,
         createdAt: string,
         updatedAt: string,
         owner: string | null,
       } | null > | null,
+      total: number | null,
       nextToken: string | null,
     } | null,
     createdAt: string,
@@ -625,10 +832,11 @@ export type OnCreateSymptomSubscription = {
     allergies: number,
     bodyAches: number,
     temperature: number,
+    severity: Severity,
     location:  {
       __typename: "Location",
-      longitude: number,
-      latitude: number,
+      lat: number,
+      lon: number,
     } | null,
     note: string | null,
     createdAt: string,
@@ -649,10 +857,11 @@ export type OnUpdateSymptomSubscription = {
     allergies: number,
     bodyAches: number,
     temperature: number,
+    severity: Severity,
     location:  {
       __typename: "Location",
-      longitude: number,
-      latitude: number,
+      lat: number,
+      lon: number,
     } | null,
     note: string | null,
     createdAt: string,
@@ -673,10 +882,11 @@ export type OnDeleteSymptomSubscription = {
     allergies: number,
     bodyAches: number,
     temperature: number,
+    severity: Severity,
     location:  {
       __typename: "Location",
-      longitude: number,
-      latitude: number,
+      lat: number,
+      lon: number,
     } | null,
     note: string | null,
     createdAt: string,

@@ -1,5 +1,5 @@
 {
-    "AppSyncApiName": "drchatbot",
+    "AppSyncApiName": "drtenma",
     "DynamoDBBillingMode": "PAY_PER_REQUEST",
     "DynamoDBEnableServerSideEncryption": "false",
     "AuthCognitoUserPoolId": {

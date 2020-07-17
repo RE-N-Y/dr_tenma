@@ -2,6 +2,44 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const nearbySymptoms = /* GraphQL */ `
+  query NearbySymptoms(
+    $location: LocationInput!
+    $m: Int
+    $limit: Int
+    $nextToken: String
+  ) {
+    nearbySymptoms(
+      location: $location
+      m: $m
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        patientID
+        fever
+        coughing
+        breathing
+        soreThroat
+        allergies
+        bodyAches
+        temperature
+        severity
+        location {
+          lat
+          lon
+        }
+        note
+        createdAt
+        updatedAt
+        owner
+      }
+      total
+      nextToken
+    }
+  }
+`;
 export const getPatient = /* GraphQL */ `
   query GetPatient($id: ID!) {
     getPatient(id: $id) {
@@ -19,11 +57,13 @@ export const getPatient = /* GraphQL */ `
           allergies
           bodyAches
           temperature
+          severity
           note
           createdAt
           updatedAt
           owner
         }
+        total
         nextToken
       }
       createdAt
@@ -32,7 +72,53 @@ export const getPatient = /* GraphQL */ `
     }
   }
 `;
-
+export const listPatients = /* GraphQL */ `
+  query ListPatients(
+    $filter: ModelPatientFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPatients(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        email
+        records {
+          total
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getSymptom = /* GraphQL */ `
+  query GetSymptom($id: ID!) {
+    getSymptom(id: $id) {
+      id
+      patientID
+      fever
+      coughing
+      breathing
+      soreThroat
+      allergies
+      bodyAches
+      temperature
+      severity
+      location {
+        lat
+        lon
+      }
+      note
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
 export const getSymptomSeries = /* GraphQL */ `
   query GetPatient($id: ID!) {
     getPatient(id: $id) {
@@ -46,8 +132,8 @@ export const getSymptomSeries = /* GraphQL */ `
           bodyAches
           temperature
           location {
-            longitude
-            latitude
+            lat
+            lon
           }
           updatedAt
         }
@@ -55,54 +141,6 @@ export const getSymptomSeries = /* GraphQL */ `
     }
   }
 `;
-
-export const listPatients = /* GraphQL */ `
-  query ListPatients(
-    $filter: ModelPatientFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listPatients(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        name
-        email
-        records {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        owner
-      }
-      nextToken
-    }
-  }
-`;
-
-export const getSymptom = /* GraphQL */ `
-  query GetSymptom($id: ID!) {
-    getSymptom(id: $id) {
-      id
-      patientID
-      fever
-      coughing
-      breathing
-      soreThroat
-      allergies
-      bodyAches
-      temperature
-      location {
-        longitude
-        latitude
-      }
-      note
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-
 export const listSymptoms = /* GraphQL */ `
   query ListSymptoms(
     $filter: ModelSymptomFilterInput
@@ -120,9 +158,48 @@ export const listSymptoms = /* GraphQL */ `
         allergies
         bodyAches
         temperature
+        severity
         location {
-          longitude
-          latitude
+          lat
+          lon
+        }
+        note
+        createdAt
+        updatedAt
+        owner
+      }
+      total
+      nextToken
+    }
+  }
+`;
+export const searchSymptoms = /* GraphQL */ `
+  query SearchSymptoms(
+    $filter: SearchableSymptomFilterInput
+    $sort: SearchableSymptomSortInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    searchSymptoms(
+      filter: $filter
+      sort: $sort
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        patientID
+        fever
+        coughing
+        breathing
+        soreThroat
+        allergies
+        bodyAches
+        temperature
+        severity
+        location {
+          lat
+          lon
         }
         note
         createdAt
@@ -130,6 +207,7 @@ export const listSymptoms = /* GraphQL */ `
         owner
       }
       nextToken
+      total
     }
   }
 `;

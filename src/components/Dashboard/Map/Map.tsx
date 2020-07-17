@@ -25,19 +25,20 @@ const Map: React.FC<MapProps> = ({ movements, useCluster, useHeatmap }) => {
   const mapContainerStyle = {
     height: "100%",
     width: "100%",
+    borderRadius: 20,
   };
 
   let filteredMoves = movements.filter((movement) => movement.location);
 
   const locations = filteredMoves.map((movement) => ({
-    lat: movement.location.latitude,
-    lng: movement.location.longitude,
+    lat: movement.location.lat,
+    lng: movement.location.lon,
   }));
 
   const heatmapLocations = filteredMoves.map((movement) => {
     return new global.google.maps.LatLng(
-      movement.location.latitude,
-      movement.location.longitude
+      movement.location.lat,
+      movement.location.lon
     );
   });
 

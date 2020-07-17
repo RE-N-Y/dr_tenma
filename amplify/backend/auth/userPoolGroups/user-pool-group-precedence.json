@@ -6,5 +6,9 @@
     {
         "groupName": "manager",
         "precedence": 2
+    },
+    {
+        "groupName": "patient",
+        "precedence": 3
     }
 ]
