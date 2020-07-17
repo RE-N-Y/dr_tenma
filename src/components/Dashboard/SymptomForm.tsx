@@ -8,6 +8,7 @@ import { API, graphqlOperation } from "aws-amplify";
 import * as mutations from "./../../graphql/mutations";
 import { GeoStore } from "../../contexts/geoContext";
 import { AuthStore } from "../../contexts/authContext";
+import { Severity } from "../../API";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -59,16 +60,21 @@ const SymptomForm: React.FC = () => {
     })
     .defined();
 
+  const getSeverity = (values: any) => {
+    return Severity.WATCH;
+  };
+
   const handleSubmit = async (values: any, { resetForm }: any) => {
     let symptomInput = {
       ...values,
       patientID: authContext.state.user.username,
+      severity: getSeverity(values),
     };
 
     if (geoContext.state.isLoactionOn) {
       symptomInput["location"] = {
-        longitude: geoContext.state.longitude,
-        latitude: geoContext.state.latitude,
+        lon: geoContext.state.longitude,
+        lat: geoContext.state.latitude,
       };
     }
     try {

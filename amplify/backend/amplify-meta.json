@@ -16,12 +16,22 @@
 		"drchatbot8488576e": {
 			"service": "Cognito",
 			"providerPlugin": "awscloudformation",
-			"dependsOn": [],
+			"dependsOn": [
+				{
+					"category": "function",
+					"resourceName": "drchatbot8488576ePostConfirmation",
+					"triggerProvider": "Cognito",
+					"attributes": [
+						"Arn",
+						"Name"
+					]
+				}
+			],
 			"providerMetadata": {
 				"s3TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-180525-deployment/amplify-cfn-templates/auth/drchatbot8488576e-cloudformation-template.yml",
 				"logicalId": "authdrchatbot8488576e"
 			},
-			"lastPushTimeStamp": "2020-07-13T13:23:49.740Z",
+			"lastPushTimeStamp": "2020-07-17T03:29:47.350Z",
 			"output": {
 				"AppClientSecret": "71v8vk8ob0rtprdbagd8rbv7u83pra9qbulmj64u9cnvtom59u6",
 				"UserPoolId": "us-east-1_I55Tjz3zF",
@@ -29,10 +39,10 @@
 				"AppClientID": "2hcoedqsf9oq2lrgs4kr4lmpgf",
 				"IdentityPoolId": "us-east-1:fc89e407-b14e-4ebb-8a78-f6d8a3144250",
 				"IdentityPoolName": "drchatbot8488576e_identitypool_8488576e__dev",
-				"UserPoolName": "drchatbot8488576e_userpool_8488576e"
+				"UserPoolName": "drchatbot8488576e_userpool_8488576e",
+				"CreatedSNSRole": "arn:aws:iam::910977133571:role/sns8488576e180525-dev"
 			},
-			"lastPushDirHash": "WoYcvvP7q3Nz3FAAMOnFOXDuzcE=",
-			"customAuth": false
+			"lastPushDirHash": "6pt80bDB0PWxQGIQv1BugbH93gY="
 		},
 		"userPoolGroups": {
 			"service": "Cognito-UserPool-Groups",
@@ -49,20 +59,21 @@
 					]
 				}
 			],
-			"lastPushTimeStamp": "2020-07-13T13:23:49.744Z",
+			"lastPushTimeStamp": "2020-07-17T03:29:47.352Z",
 			"providerMetadata": {
 				"s3TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-180525-deployment/amplify-cfn-templates/auth/template.json",
 				"logicalId": "authuserPoolGroups"
 			},
 			"output": {
 				"adminGroupRole": "arn:aws:iam::910977133571:role/us-east-1_I55Tjz3zF-adminGroupRole",
-				"managerGroupRole": "arn:aws:iam::910977133571:role/us-east-1_I55Tjz3zF-managerGroupRole"
+				"managerGroupRole": "arn:aws:iam::910977133571:role/us-east-1_I55Tjz3zF-managerGroupRole",
+				"patientGroupRole": "arn:aws:iam::910977133571:role/us-east-1_I55Tjz3zF-patientGroupRole"
 			},
-			"lastPushDirHash": "wXeRx5dvnV02SuzaLhhLc4GOdoo="
+			"lastPushDirHash": "ubjSJU9w0Wgu6/seOUMxLXgOK6M="
 		}
 	},
 	"api": {
-		"drchatbot": {
+		"drtenma": {
 			"service": "AppSync",
 			"providerPlugin": "awscloudformation",
 			"output": {
@@ -75,16 +86,126 @@
 						}
 					}
 				},
-				"GraphQLAPIIdOutput": "ruorwivahrgdpengbdtxaje4wa",
-				"GraphQLAPIEndpointOutput": "https://7hew5yhrinchhfbjhp3r3cylwy.appsync-api.us-east-1.amazonaws.com/graphql"
+				"GraphQLAPIIdOutput": "ithlcdw5ljbk5cl6kbnciqvesi",
+				"GraphQLAPIEndpointOutput": "https://dpd25lfmhfevbcghfdlcx6bnd4.appsync-api.us-east-1.amazonaws.com/graphql"
 			},
 			"providerMetadata": {
 				"s3TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-180525-deployment/amplify-cfn-templates/api/cloudformation-template.json",
-				"logicalId": "apidrchatbot"
+				"logicalId": "apidrtenma"
 			},
-			"lastPushTimeStamp": "2020-07-13T13:23:49.742Z",
-			"lastPushDirHash": "bDazwkGnNnrr05DYzzv4YveUerE="
+			"lastPushTimeStamp": "2020-07-17T03:29:50.662Z",
+			"lastPushDirHash": "KmPCu9FVuRy0WEck0/4rwybhs9s="
+		},
+		"AdminQueries": {
+			"service": "API Gateway",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [
+				{
+					"category": "auth",
+					"resourceName": "drchatbot8488576e",
+					"attributes": [
+						"UserPoolId"
+					]
+				},
+				{
+					"category": "function",
+					"resourceName": "AdminQueriesa4850e42",
+					"attributes": [
+						"Arn",
+						"Name"
+					]
+				}
+			],
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-180525-deployment/amplify-cfn-templates/api/admin-queries-cloudformation-template.json",
+				"logicalId": "apiAdminQueries"
+			},
+			"lastPushTimeStamp": "2020-07-17T03:29:47.354Z",
+			"output": {
+				"ApiName": "AdminQueries",
+				"RootUrl": "https://96i480te1l.execute-api.us-east-1.amazonaws.com/dev"
+			},
+			"lastPushDirHash": "E20JkH+v8n74XEh44VqusbvMjq4="
 		}
 	},
-	"function": {}
+	"function": {
+		"AdminQueriesa5859537": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true,
+			"dependsOn": [
+				{
+					"category": "auth",
+					"resourceName": "drchatbot8488576e",
+					"attributes": [
+						"UserPoolId"
+					]
+				}
+			],
+			"lastBuildTimeStamp": "2020-07-16T04:56:53.485Z",
+			"lastPackageTimeStamp": "2020-07-16T04:56:55.809Z",
+			"distZipFilename": "AdminQueriesa5859537-6c63326f615a5932544a-build.zip",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-180525-deployment/amplify-cfn-templates/function/AdminQueriesa5859537-cloudformation-template.json",
+				"logicalId": "functionAdminQueriesa5859537"
+			},
+			"lastPushTimeStamp": "2020-07-17T03:29:47.355Z",
+			"output": {
+				"Region": "us-east-1",
+				"Arn": "arn:aws:lambda:us-east-1:910977133571:function:AdminQueriesa5859537-dev",
+				"Name": "AdminQueriesa5859537-dev",
+				"LambdaExecutionRole": "AdminQueriesa5859537LambdaRole-dev"
+			},
+			"lastPushDirHash": "9okXcz0yl9wTecvXkKbEp2VeWoc="
+		},
+		"drchatbot8488576ePostConfirmation": {
+			"build": true,
+			"providerPlugin": "awscloudformation",
+			"service": "Lambda",
+			"lastBuildTimeStamp": "2020-07-16T15:41:54.883Z",
+			"lastPackageTimeStamp": "2020-07-16T15:41:55.288Z",
+			"distZipFilename": "drchatbot8488576ePostConfirmation-35526e54497566362f57-build.zip",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-180525-deployment/amplify-cfn-templates/function/drchatbot8488576ePostConfirmation-cloudformation-template.json",
+				"logicalId": "functiondrchatbot8488576ePostConfirmation"
+			},
+			"lastPushTimeStamp": "2020-07-17T03:29:47.356Z",
+			"output": {
+				"Region": "us-east-1",
+				"Arn": "arn:aws:lambda:us-east-1:910977133571:function:drchatbot8488576ePostConfirmation-dev",
+				"Name": "drchatbot8488576ePostConfirmation-dev",
+				"LambdaExecutionRole": "drchatbot8488576ePostConfirmation-dev"
+			},
+			"lastPushDirHash": "wvMgmXy7OzEuq5UWYU6h30JCh00="
+		},
+		"AdminQueriesa4850e42": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true,
+			"dependsOn": [
+				{
+					"category": "auth",
+					"resourceName": "drchatbot8488576e",
+					"attributes": [
+						"UserPoolId"
+					]
+				}
+			],
+			"lastBuildTimeStamp": "2020-07-16T15:41:54.881Z",
+			"lastPackageTimeStamp": "2020-07-16T15:41:57.698Z",
+			"distZipFilename": "AdminQueriesa4850e42-6c63326f615a5932544a-build.zip",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-180525-deployment/amplify-cfn-templates/function/AdminQueriesa4850e42-cloudformation-template.json",
+				"logicalId": "functionAdminQueriesa4850e42"
+			},
+			"lastPushTimeStamp": "2020-07-17T03:29:47.357Z",
+			"output": {
+				"Region": "us-east-1",
+				"Arn": "arn:aws:lambda:us-east-1:910977133571:function:AdminQueriesa4850e42-dev",
+				"Name": "AdminQueriesa4850e42-dev",
+				"LambdaExecutionRole": "AdminQueriesa4850e42LambdaRole-dev"
+			},
+			"lastPushDirHash": "pNetF2iQj1u9A98ZyzA7IZvQbYg="
+		}
+	}
 }

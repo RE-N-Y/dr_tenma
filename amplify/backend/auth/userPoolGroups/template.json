@@ -149,6 +149,60 @@
         },
      
     
+        "patientGroup": {
+          "Type" : "AWS::Cognito::UserPoolGroup",
+          "Properties" : {
+              "GroupName" : "patient",
+              "Precedence" : 3,
+              
+              "RoleArn" : {
+                "Fn::GetAtt": [
+                    "patientGroupRole",
+                    "Arn"
+                ]
+              },
+              
+              "UserPoolId" : {
+                "Ref": "authdrchatbot8488576eUserPoolId"
+              } 
+            }
+        },
+        
+        "patientGroupRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "RoleName":{
+                    "Fn::Join": [
+                        "",
+                        [
+                          {
+                            "Ref": "authdrchatbot8488576eUserPoolId"
+                          },
+                          "-patientGroupRole"
+                        ]
+                    ]
+                },
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Sid": "",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Federated": "cognito-identity.amazonaws.com"
+                            },
+                            "Action": "sts:AssumeRoleWithWebIdentity",
+                            "Condition": {
+                              "StringEquals": {"cognito-identity.amazonaws.com:aud": {"Ref":"authdrchatbot8488576eIdentityPoolId"}},
+                              "ForAnyValue:StringLike": {"cognito-identity.amazonaws.com:amr": "authenticated"}
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+     
+    
     
         "LambdaExecutionRole": {
             "Type": "AWS::IAM::Role",
@@ -364,6 +418,17 @@
             "Value": {
                 "Fn::GetAtt": [
                     "managerGroupRole",
+                    "Arn"
+                ]
+            }
+         
+        },
+        
+      
+        "patientGroupRole": {
+            "Value": {
+                "Fn::GetAtt": [
+                    "patientGroupRole",
                     "Arn"
                 ]
             }

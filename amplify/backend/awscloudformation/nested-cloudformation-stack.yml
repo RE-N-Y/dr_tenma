@@ -78,7 +78,7 @@
 					"resourceNameTruncated": "drchat8488576e",
 					"userPoolName": "drchatbot8488576e_userpool_8488576e",
 					"autoVerifiedAttributes": "email",
-					"mfaConfiguration": "OFF",
+					"mfaConfiguration": "OPTIONAL",
 					"mfaTypes": "SMS Text Message",
 					"smsAuthenticationMessage": "Your authentication code is {####}",
 					"smsVerificationMessage": "Your verification code is {####}",
@@ -109,10 +109,31 @@
 							"Arn"
 						]
 					},
-					"useDefault": "default",
+					"useDefault": "manual",
 					"usernameAttributes": "email",
-					"userPoolGroupList": "",
-					"dependsOn": "",
+					"userPoolGroupList": "admin,manager,patient",
+					"dependsOn": "[object Object]",
+					"thirdPartyAuth": false,
+					"userPoolGroups": false,
+					"adminQueries": false,
+					"triggers": "{\"PostConfirmation\":[\"add-to-group\"]}",
+					"hostedUI": false,
+					"parentStack": {
+						"Ref": "AWS::StackId"
+					},
+					"permissions": "{\"policyName\":\"AddToGroupCognito\",\"trigger\":\"PostConfirmation\",\"effect\":\"Allow\",\"actions\":[\"cognito-idp:AdminAddUserToGroup\",\"cognito-idp:GetGroup\",\"cognito-idp:CreateGroup\"],\"resource\":{\"paramType\":\"!GetAtt\",\"keys\":[\"UserPool\",\"Arn\"]}}",
+					"functiondrchatbot8488576ePostConfirmationArn": {
+						"Fn::GetAtt": [
+							"functiondrchatbot8488576ePostConfirmation",
+							"Outputs.Arn"
+						]
+					},
+					"functiondrchatbot8488576ePostConfirmationName": {
+						"Fn::GetAtt": [
+							"functiondrchatbot8488576ePostConfirmation",
+							"Outputs.Name"
+						]
+					},
 					"env": "dev"
 				}
 			}
@@ -162,13 +183,13 @@
 				}
 			}
 		},
-		"apidrchatbot": {
+		"apidrtenma": {
 			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {
 				"TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-180525-deployment/amplify-cfn-templates/api/cloudformation-template.json",
 				"Parameters": {
 					"CreateAPIKey": 0,
-					"AppSyncApiName": "drchatbot",
+					"AppSyncApiName": "drtenma",
 					"DynamoDBBillingMode": "PAY_PER_REQUEST",
 					"DynamoDBEnableServerSideEncryption": "false",
 					"AuthCognitoUserPoolId": {
@@ -178,7 +199,81 @@
 						]
 					},
 					"S3DeploymentBucket": "amplify-drchatbot-dev-180525-deployment",
-					"S3DeploymentRootKey": "amplify-appsync-files/a8835df401803876a86e70ade4d8ffdaf18562e1",
+					"S3DeploymentRootKey": "amplify-appsync-files/44780639d1dff2ac5d24ed44d8b0cf0325a33047",
+					"env": "dev"
+				}
+			}
+		},
+		"apiAdminQueries": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-180525-deployment/amplify-cfn-templates/api/admin-queries-cloudformation-template.json",
+				"Parameters": {
+					"authRoleName": {
+						"Ref": "AuthRoleName"
+					},
+					"unauthRoleName": {
+						"Ref": "UnauthRoleName"
+					},
+					"authdrchatbot8488576eUserPoolId": {
+						"Fn::GetAtt": [
+							"authdrchatbot8488576e",
+							"Outputs.UserPoolId"
+						]
+					},
+					"functionAdminQueriesa4850e42Arn": {
+						"Fn::GetAtt": [
+							"functionAdminQueriesa4850e42",
+							"Outputs.Arn"
+						]
+					},
+					"functionAdminQueriesa4850e42Name": {
+						"Fn::GetAtt": [
+							"functionAdminQueriesa4850e42",
+							"Outputs.Name"
+						]
+					},
+					"env": "dev"
+				}
+			}
+		},
+		"functionAdminQueriesa5859537": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-180525-deployment/amplify-cfn-templates/function/AdminQueriesa5859537-cloudformation-template.json",
+				"Parameters": {
+					"authdrchatbot8488576eUserPoolId": {
+						"Fn::GetAtt": [
+							"authdrchatbot8488576e",
+							"Outputs.UserPoolId"
+						]
+					},
+					"env": "dev"
+				}
+			}
+		},
+		"functiondrchatbot8488576ePostConfirmation": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-180525-deployment/amplify-cfn-templates/function/drchatbot8488576ePostConfirmation-cloudformation-template.json",
+				"Parameters": {
+					"modules": "add-to-group",
+					"GROUP": "patient",
+					"env": "dev"
+				}
+			}
+		},
+		"functionAdminQueriesa4850e42": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-180525-deployment/amplify-cfn-templates/function/AdminQueriesa4850e42-cloudformation-template.json",
+				"Parameters": {
+					"authdrchatbot8488576eUserPoolId": {
+						"Fn::GetAtt": [
+							"authdrchatbot8488576e",
+							"Outputs.UserPoolId"
+						]
+					},
 					"env": "dev"
 				}
 			}

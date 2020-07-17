@@ -24,7 +24,7 @@ const App: React.FC = () => {
   useEffect(() => {
     let initAuth = async () => {
       try {
-        const user = await Auth.currentAuthenticatedUser();
+        const user = await Auth.currentUserPoolUser();
         dispatch({ type: AuthActionType.setUser, payload: user });
         dispatch({
           type: AuthActionType.setAuthState,
@@ -89,7 +89,11 @@ const App: React.FC = () => {
     <div className={classes.root}>
       <CssBaseline />
       {state.authState === AuthState.SignedIn && state.user ? (
-        <Dashboard />
+        <Dashboard
+          admin={state.user?.signInUserSession.idToken.payload[
+            "cognito:groups"
+          ].includes("admin")}
+        />
       ) : (
         <Authenticator />
       )}

@@ -22,11 +22,13 @@ export const createPatient = /* GraphQL */ `
           allergies
           bodyAches
           temperature
+          severity
           note
           createdAt
           updatedAt
           owner
         }
+        total
         nextToken
       }
       createdAt
@@ -55,11 +57,13 @@ export const updatePatient = /* GraphQL */ `
           allergies
           bodyAches
           temperature
+          severity
           note
           createdAt
           updatedAt
           owner
         }
+        total
         nextToken
       }
       createdAt
@@ -88,11 +92,13 @@ export const deletePatient = /* GraphQL */ `
           allergies
           bodyAches
           temperature
+          severity
           note
           createdAt
           updatedAt
           owner
         }
+        total
         nextToken
       }
       createdAt
@@ -116,9 +122,10 @@ export const createSymptom = /* GraphQL */ `
       allergies
       bodyAches
       temperature
+      severity
       location {
-        longitude
-        latitude
+        lat
+        lon
       }
       note
       createdAt
@@ -142,9 +149,10 @@ export const updateSymptom = /* GraphQL */ `
       allergies
       bodyAches
       temperature
+      severity
       location {
-        longitude
-        latitude
+        lat
+        lon
       }
       note
       createdAt
@@ -168,9 +176,10 @@ export const deleteSymptom = /* GraphQL */ `
       allergies
       bodyAches
       temperature
+      severity
       location {
-        longitude
-        latitude
+        lat
+        lon
       }
       note
       createdAt
