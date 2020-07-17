@@ -1,14 +1,16 @@
-import React, { useContext } from "react";
-import {
-  GoogleMap,
-  LoadScript,
-  Marker,
-  MarkerClusterer,
-  HeatmapLayer,
-} from "@react-google-maps/api";
-import { lightStyle } from "./mapStyles";
-import { GeoStore } from "../../../contexts/geoContext";
+import React, { useContext, useEffect, useState } from "react";
+import { GeoStore, GeoActionType } from "../../../contexts/geoContext";
 import { LocationInput } from "../../../API";
+import mapboxgl from "mapbox-gl";
+import { symptomsToGeoJSON, safeRemoveLayer } from "./mapUtils";
+import {
+  cluster,
+  clusterCount,
+  unclustered,
+  heatmap,
+  heatmapPoint,
+} from "./mapSetting";
+mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN as string;
 
 interface MapProps {
   movements: { location: LocationInput; updatedAt: string }[];
@@ -16,11 +18,13 @@ interface MapProps {
   useCluster: boolean;
 }
 
-const libs = ["visualization"];
-
 const Map: React.FC<MapProps> = ({ movements, useCluster, useHeatmap }) => {
   const { state } = useContext(GeoStore);
-  let global: any = window;
+  const { dispatch } = useContext(GeoStore);
+  const [map, setMap] = useState<mapboxgl.Map>();
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+
+  let ref: any;
 
   const mapContainerStyle = {
     height: "100%",
@@ -28,52 +32,100 @@ const Map: React.FC<MapProps> = ({ movements, useCluster, useHeatmap }) => {
     borderRadius: 20,
   };
 
-  let filteredMoves = movements.filter((movement) => movement.location);
+  useEffect(() => {
+    let map = new mapboxgl.Map({
+      container: ref,
+      style: "mapbox://styles/mapbox/light-v10",
+      center: [139.7745, 35.7023],
+      zoom: 10,
+    });
+    setIsLoaded(false);
 
-  const locations = filteredMoves.map((movement) => ({
-    lat: movement.location.lat,
-    lng: movement.location.lon,
-  }));
+    let geolocator = new mapboxgl.GeolocateControl({
+      positionOptions: {
+        enableHighAccuracy: true,
+      },
+    });
 
-  const heatmapLocations = filteredMoves.map((movement) => {
-    return new global.google.maps.LatLng(
-      movement.location.lat,
-      movement.location.lon
+    geolocator.on("geolocate", (event: any) => {
+      dispatch({
+        type: GeoActionType.setLocation,
+        longitude: event.coords.longitude,
+        latitude: event.coords.latitude,
+      });
+    });
+
+    map.on("load", () => {
+      map.addControl(geolocator);
+      setIsLoaded(true);
+    });
+
+    map.on("dragstart", (event) => {
+      console.log(event);
+    });
+
+    map.on("dragend", (event) => {
+      console.log(event);
+    });
+
+    setMap(map);
+  }, []);
+
+  useEffect(() => {
+    const data = symptomsToGeoJSON(
+      movements
+        .filter((movement) => movement.location)
+        .map((movement) => {
+          const { location, ...rest } = movement;
+          return {
+            lat: movement.location.lat,
+            lon: movement.location.lon,
+            ...rest,
+          };
+        })
     );
-  });
+
+    map?.addSource("symptoms", {
+      type: "geojson",
+      data,
+    });
+    map?.addSource("symptoms-cluster", {
+      type: "geojson",
+      data,
+      cluster: true,
+    });
+  }, [movements]);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    if (useCluster) {
+      map?.addLayer(cluster);
+      map?.addLayer(clusterCount);
+      map?.addLayer(unclustered);
+    } else {
+      safeRemoveLayer(map, "clusters");
+      safeRemoveLayer(map, "cluster-count");
+      safeRemoveLayer(map, "unclustered-point");
+    }
+  }, [useCluster, isLoaded]);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    if (useHeatmap) {
+      map?.addLayer(heatmap, "waterway-label");
+      map?.addLayer(heatmapPoint, "waterway-label");
+    } else {
+      safeRemoveLayer(map, "symptoms-heat");
+      safeRemoveLayer(map, "symptoms-point");
+    }
+  }, [useHeatmap, isLoaded]);
 
   return (
-    <LoadScript
-      googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAP_API_KEY}
-      libraries={libs}
-    >
-      <GoogleMap
-        mapContainerStyle={mapContainerStyle}
-        zoom={13}
-        center={{
-          lat: state.latitude,
-          lng: state.longitude,
-        }}
-        options={{ styles: lightStyle }}
-      >
-        <Marker
-          position={{
-            lat: state.latitude,
-            lng: state.longitude,
-          }}
-        />
-        {useCluster && (
-          <MarkerClusterer>
-            {(clusterer) =>
-              locations.map((location, index) => (
-                <Marker key={index} position={location} clusterer={clusterer} />
-              ))
-            }
-          </MarkerClusterer>
-        )}
-        {useHeatmap && <HeatmapLayer data={heatmapLocations} />}
-      </GoogleMap>
-    </LoadScript>
+    <>
+      <div style={mapContainerStyle} ref={(el) => (ref = el)} />
+    </>
   );
 };
 
