@@ -67,6 +67,7 @@ const MapPanel: React.FC<MapProps> = ({ mapProps }) => {
           }
         />
       </Box>
+
       <Paper className={classes.mapPanel}>
         <Map {...mapProps} {...mapSetting} />
       </Paper>

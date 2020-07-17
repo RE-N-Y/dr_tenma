@@ -31,7 +31,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-180525-deployment/amplify-cfn-templates/auth/drchatbot8488576e-cloudformation-template.yml",
 				"logicalId": "authdrchatbot8488576e"
 			},
-			"lastPushTimeStamp": "2020-07-17T03:29:47.350Z",
+			"lastPushTimeStamp": "2020-07-17T05:12:38.908Z",
 			"output": {
 				"AppClientSecret": "71v8vk8ob0rtprdbagd8rbv7u83pra9qbulmj64u9cnvtom59u6",
 				"UserPoolId": "us-east-1_I55Tjz3zF",
@@ -59,7 +59,7 @@
 					]
 				}
 			],
-			"lastPushTimeStamp": "2020-07-17T03:29:47.352Z",
+			"lastPushTimeStamp": "2020-07-17T05:12:38.910Z",
 			"providerMetadata": {
 				"s3TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-180525-deployment/amplify-cfn-templates/auth/template.json",
 				"logicalId": "authuserPoolGroups"
@@ -93,8 +93,8 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-180525-deployment/amplify-cfn-templates/api/cloudformation-template.json",
 				"logicalId": "apidrtenma"
 			},
-			"lastPushTimeStamp": "2020-07-17T03:29:50.662Z",
-			"lastPushDirHash": "KmPCu9FVuRy0WEck0/4rwybhs9s="
+			"lastPushTimeStamp": "2020-07-17T05:12:41.977Z",
+			"lastPushDirHash": "ZREWy34rjCzEU7gqPTDJ2+6dDHk="
 		},
 		"AdminQueries": {
 			"service": "API Gateway",
@@ -120,7 +120,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-180525-deployment/amplify-cfn-templates/api/admin-queries-cloudformation-template.json",
 				"logicalId": "apiAdminQueries"
 			},
-			"lastPushTimeStamp": "2020-07-17T03:29:47.354Z",
+			"lastPushTimeStamp": "2020-07-17T05:12:38.912Z",
 			"output": {
 				"ApiName": "AdminQueries",
 				"RootUrl": "https://96i480te1l.execute-api.us-east-1.amazonaws.com/dev"
@@ -149,7 +149,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-180525-deployment/amplify-cfn-templates/function/AdminQueriesa5859537-cloudformation-template.json",
 				"logicalId": "functionAdminQueriesa5859537"
 			},
-			"lastPushTimeStamp": "2020-07-17T03:29:47.355Z",
+			"lastPushTimeStamp": "2020-07-17T05:12:38.913Z",
 			"output": {
 				"Region": "us-east-1",
 				"Arn": "arn:aws:lambda:us-east-1:910977133571:function:AdminQueriesa5859537-dev",
@@ -169,7 +169,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-180525-deployment/amplify-cfn-templates/function/drchatbot8488576ePostConfirmation-cloudformation-template.json",
 				"logicalId": "functiondrchatbot8488576ePostConfirmation"
 			},
-			"lastPushTimeStamp": "2020-07-17T03:29:47.356Z",
+			"lastPushTimeStamp": "2020-07-17T05:12:38.914Z",
 			"output": {
 				"Region": "us-east-1",
 				"Arn": "arn:aws:lambda:us-east-1:910977133571:function:drchatbot8488576ePostConfirmation-dev",
@@ -198,7 +198,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/amplify-drchatbot-dev-180525-deployment/amplify-cfn-templates/function/AdminQueriesa4850e42-cloudformation-template.json",
 				"logicalId": "functionAdminQueriesa4850e42"
 			},
-			"lastPushTimeStamp": "2020-07-17T03:29:47.357Z",
+			"lastPushTimeStamp": "2020-07-17T05:12:38.915Z",
 			"output": {
 				"Region": "us-east-1",
 				"Arn": "arn:aws:lambda:us-east-1:910977133571:function:AdminQueriesa4850e42-dev",
