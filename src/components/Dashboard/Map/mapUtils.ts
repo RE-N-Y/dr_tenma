@@ -22,3 +22,12 @@ export const symptomsToGeoJSON = (symptoms: any[]) => {
 export const safeRemoveLayer = (map: mapboxgl.Map | undefined, id: string) => {
   if (map?.getLayer(id)) map.removeLayer(id);
 };
+
+export const safeAddSource = (
+  map: mapboxgl.Map | undefined,
+  id: string,
+  sourceData: mapboxgl.AnySourceData
+) => {
+  if (map?.getSource(id)) map.removeSource(id);
+  map?.addSource(id, sourceData);
+};

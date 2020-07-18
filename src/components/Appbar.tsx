@@ -12,7 +12,6 @@ import {
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { Auth } from "aws-amplify";
 import { TrackChanges } from "@material-ui/icons";
-import Geolocator from "./Geolocator";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -95,7 +94,6 @@ const Appbar: React.FC = () => {
         >
           <Signout />
         </Popover>
-        <Geolocator />
       </Toolbar>
     </AppBar>
   );

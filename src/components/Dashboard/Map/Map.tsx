@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { GeoStore, GeoActionType } from "../../../contexts/geoContext";
 import { LocationInput } from "../../../API";
 import mapboxgl from "mapbox-gl";
-import { symptomsToGeoJSON, safeRemoveLayer } from "./mapUtils";
+import { symptomsToGeoJSON, safeRemoveLayer, safeAddSource } from "./mapUtils";
 import {
   cluster,
   clusterCount,
@@ -22,7 +22,6 @@ const Map: React.FC<MapProps> = ({ movements, useCluster, useHeatmap }) => {
   const { state } = useContext(GeoStore);
   const { dispatch } = useContext(GeoStore);
   const [map, setMap] = useState<mapboxgl.Map>();
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   let ref: any;
 
@@ -39,7 +38,7 @@ const Map: React.FC<MapProps> = ({ movements, useCluster, useHeatmap }) => {
       center: [139.7745, 35.7023],
       zoom: 10,
     });
-    setIsLoaded(false);
+    setMap(undefined);
 
     let geolocator = new mapboxgl.GeolocateControl({
       positionOptions: {
@@ -57,7 +56,7 @@ const Map: React.FC<MapProps> = ({ movements, useCluster, useHeatmap }) => {
 
     map.on("load", () => {
       map.addControl(geolocator);
-      setIsLoaded(true);
+      setMap(map);
     });
 
     map.on("dragstart", (event) => {
@@ -67,8 +66,6 @@ const Map: React.FC<MapProps> = ({ movements, useCluster, useHeatmap }) => {
     map.on("dragend", (event) => {
       console.log(event);
     });
-
-    setMap(map);
   }, []);
 
   useEffect(() => {
@@ -85,11 +82,11 @@ const Map: React.FC<MapProps> = ({ movements, useCluster, useHeatmap }) => {
         })
     );
 
-    map?.addSource("symptoms", {
+    safeAddSource(map, "symptoms", {
       type: "geojson",
       data,
     });
-    map?.addSource("symptoms-cluster", {
+    safeAddSource(map, "symptoms-cluster", {
       type: "geojson",
       data,
       cluster: true,
@@ -97,30 +94,30 @@ const Map: React.FC<MapProps> = ({ movements, useCluster, useHeatmap }) => {
   }, [movements]);
 
   useEffect(() => {
-    if (!isLoaded) return;
+    if (!map) return;
 
-    if (useCluster) {
-      map?.addLayer(cluster);
-      map?.addLayer(clusterCount);
-      map?.addLayer(unclustered);
+    if (useCluster && map) {
+      map.addLayer(cluster);
+      map.addLayer(clusterCount);
+      map.addLayer(unclustered);
     } else {
       safeRemoveLayer(map, "clusters");
       safeRemoveLayer(map, "cluster-count");
       safeRemoveLayer(map, "unclustered-point");
     }
-  }, [useCluster, isLoaded]);
+  }, [useCluster, map]);
 
   useEffect(() => {
-    if (!isLoaded) return;
+    if (!map) return;
 
     if (useHeatmap) {
-      map?.addLayer(heatmap, "waterway-label");
-      map?.addLayer(heatmapPoint, "waterway-label");
+      map.addLayer(heatmap, "waterway-label");
+      map.addLayer(heatmapPoint, "waterway-label");
     } else {
       safeRemoveLayer(map, "symptoms-heat");
       safeRemoveLayer(map, "symptoms-point");
     }
-  }, [useHeatmap, isLoaded]);
+  }, [useHeatmap, map]);
 
   return (
     <>
