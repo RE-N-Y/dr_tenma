@@ -1,3 +1,15 @@
+export const main: any = {
+  id: "main",
+  type: "circle",
+  source: "symptoms",
+  paint: {
+    "circle-color": "#11b4da",
+    "circle-radius": 4,
+    "circle-stroke-width": 1,
+    "circle-stroke-color": "#fff",
+  },
+};
+
 export const cluster: any = {
   id: "clusters",
   type: "circle",

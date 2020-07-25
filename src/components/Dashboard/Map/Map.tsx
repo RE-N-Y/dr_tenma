@@ -2,23 +2,23 @@ import React, { useContext, useEffect, useState } from "react";
 import { GeoStore, GeoActionType } from "../../../contexts/geoContext";
 import { LocationInput } from "../../../API";
 import mapboxgl from "mapbox-gl";
-import { symptomsToGeoJSON, safeRemoveLayer, safeAddSource } from "./mapUtils";
+import { symptomsToGeoJSON, initData } from "./mapUtils";
 import {
   cluster,
   clusterCount,
   unclustered,
   heatmap,
   heatmapPoint,
+  main,
 } from "./mapSetting";
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN as string;
 
 interface MapProps {
   movements: { location: LocationInput; updatedAt: string }[];
-  useHeatmap: boolean;
-  useCluster: boolean;
+  layer: "main" | "cluster" | "heatmap";
 }
 
-const Map: React.FC<MapProps> = ({ movements, useCluster, useHeatmap }) => {
+const Map: React.FC<MapProps> = ({ movements, layer }) => {
   const { state } = useContext(GeoStore);
   const { dispatch } = useContext(GeoStore);
   const [map, setMap] = useState<mapboxgl.Map>();
@@ -56,19 +56,31 @@ const Map: React.FC<MapProps> = ({ movements, useCluster, useHeatmap }) => {
 
     map.on("load", () => {
       map.addControl(geolocator);
+
+      map.addSource("symptoms", {
+        type: "geojson",
+        data: initData,
+      });
+      map.addSource("symptoms-cluster", {
+        type: "geojson",
+        data: initData,
+        cluster: true,
+      });
+
+      map.addLayer(main);
+      map.addLayer(cluster);
+      map.addLayer(clusterCount);
+      map.addLayer(unclustered);
+      map.addLayer(heatmap, "waterway-label");
+      map.addLayer(heatmapPoint, "waterway-label");
+
       setMap(map);
-    });
-
-    map.on("dragstart", (event) => {
-      console.log(event);
-    });
-
-    map.on("dragend", (event) => {
-      console.log(event);
     });
   }, []);
 
   useEffect(() => {
+    if (!map) return;
+
     const data = symptomsToGeoJSON(
       movements
         .filter((movement) => movement.location)
@@ -81,43 +93,28 @@ const Map: React.FC<MapProps> = ({ movements, useCluster, useHeatmap }) => {
           };
         })
     );
-
-    safeAddSource(map, "symptoms", {
-      type: "geojson",
-      data,
-    });
-    safeAddSource(map, "symptoms-cluster", {
-      type: "geojson",
-      data,
-      cluster: true,
-    });
-  }, [movements]);
+    let pointSource = map.getSource("symptoms") as mapboxgl.GeoJSONSource;
+    let clusterSource = map.getSource(
+      "symptoms-cluster"
+    ) as mapboxgl.GeoJSONSource;
+    pointSource.setData(data);
+    clusterSource.setData(data);
+  }, [map, movements]);
 
   useEffect(() => {
     if (!map) return;
 
-    if (useCluster && map) {
-      map.addLayer(cluster);
-      map.addLayer(clusterCount);
-      map.addLayer(unclustered);
-    } else {
-      safeRemoveLayer(map, "clusters");
-      safeRemoveLayer(map, "cluster-count");
-      safeRemoveLayer(map, "unclustered-point");
-    }
-  }, [useCluster, map]);
+    const mainVisibility = layer === "main" ? "visible" : "none";
+    const clusterVisibility = layer === "cluster" ? "visible" : "none";
+    const heatmapVisibility = layer === "heatmap" ? "visible" : "none";
 
-  useEffect(() => {
-    if (!map) return;
-
-    if (useHeatmap) {
-      map.addLayer(heatmap, "waterway-label");
-      map.addLayer(heatmapPoint, "waterway-label");
-    } else {
-      safeRemoveLayer(map, "symptoms-heat");
-      safeRemoveLayer(map, "symptoms-point");
-    }
-  }, [useHeatmap, map]);
+    map.setLayoutProperty("main", "visibility", mainVisibility);
+    map.setLayoutProperty("clusters", "visibility", clusterVisibility);
+    map.setLayoutProperty("cluster-count", "visibility", clusterVisibility);
+    map.setLayoutProperty("unclustered-point", "visibility", clusterVisibility);
+    map.setLayoutProperty("symptoms-heat", "visibility", heatmapVisibility);
+    map.setLayoutProperty("symptoms-point", "visibility", heatmapVisibility);
+  }, [map, layer]);
 
   return (
     <>

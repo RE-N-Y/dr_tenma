@@ -4,7 +4,8 @@ import {
   FormControlLabel,
   Paper,
   Typography,
-  Switch,
+  Select,
+  MenuItem,
 } from "@material-ui/core";
 import Map from "./Map";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
@@ -30,12 +31,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const MapPanel: React.FC<MapProps> = ({ mapProps }) => {
   const classes = useStyles();
-  const [mapSetting, setMapSetting] = useState({
-    useCluster: false,
-    useHeatmap: false,
-  });
-  const handleToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMapSetting({ ...mapSetting, [event.target.name]: event.target.checked });
+
+  const [layer, setLayer] = useState("main");
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setLayer(event.target.value as string);
   };
 
   return (
@@ -44,32 +43,15 @@ const MapPanel: React.FC<MapProps> = ({ mapProps }) => {
         <Typography variant="h6" className={classes.title}>
           Your activity
         </Typography>
-        <FormControlLabel
-          label="Heatmap"
-          control={
-            <Switch
-              name="useHeatmap"
-              color="primary"
-              checked={mapSetting.useHeatmap}
-              onChange={handleToggle}
-            />
-          }
-        />
-        <FormControlLabel
-          label="Cluster"
-          control={
-            <Switch
-              name="useCluster"
-              color="primary"
-              checked={mapSetting.useCluster}
-              onChange={handleToggle}
-            />
-          }
-        />
+        <Select value={layer} onChange={handleChange}>
+          <MenuItem value="main">Main</MenuItem>
+          <MenuItem value="heatmap">Heatmap</MenuItem>
+          <MenuItem value="cluster">Cluster</MenuItem>
+        </Select>
       </Box>
 
       <Paper className={classes.mapPanel}>
-        <Map {...mapProps} {...mapSetting} />
+        <Map {...mapProps} layer={layer} />
       </Paper>
     </>
   );

@@ -1,7 +1,13 @@
+const FEATURE_COLLECTION: "FeatureCollection" = "FeatureCollection";
+const FEATURE: "Feature" = "Feature";
+const POINT: "Point" = "Point";
+
+export const initData: any = {
+  type: "FeatureCollection",
+  features: [],
+};
+
 export const symptomsToGeoJSON = (symptoms: any[]) => {
-  const FEATURE_COLLECTION: "FeatureCollection" = "FeatureCollection";
-  const FEATURE: "Feature" = "Feature";
-  const POINT: "Point" = "Point";
   let features = symptoms.map((symptom) => {
     let { lat, lon, ...rest } = symptom;
     return {
@@ -19,15 +25,17 @@ export const symptomsToGeoJSON = (symptoms: any[]) => {
   return { type: FEATURE_COLLECTION, features };
 };
 
-export const safeRemoveLayer = (map: mapboxgl.Map | undefined, id: string) => {
-  if (map?.getLayer(id)) map.removeLayer(id);
-};
-
 export const safeAddSource = (
   map: mapboxgl.Map | undefined,
   id: string,
-  sourceData: mapboxgl.AnySourceData
+  sourceData: any
 ) => {
-  if (map?.getSource(id)) map.removeSource(id);
-  map?.addSource(id, sourceData);
+  const source: mapboxgl.GeoJSONSource = map?.getSource(
+    id
+  ) as mapboxgl.GeoJSONSource;
+  if (source) {
+    source.setData(sourceData);
+  } else {
+    map?.addSource(id, sourceData);
+  }
 };
