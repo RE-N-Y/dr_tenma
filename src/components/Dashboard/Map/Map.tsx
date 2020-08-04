@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { GeoStore, GeoActionType } from "../../../contexts/geoContext";
 import { LocationInput } from "../../../API";
 import mapboxgl from "mapbox-gl";
-import { symptomsToGeoJSON, initData } from "./mapUtils";
+import { symptomsToGeoJSON, initData, initPoly } from "./mapUtils";
 import {
   cluster,
   clusterCount,
@@ -10,7 +10,13 @@ import {
   heatmap,
   heatmapPoint,
   main,
+  searchCircle,
+  searchRadius,
 } from "./mapSetting";
+import * as turf from "@turf/turf";
+import length from "@turf/length";
+import * as _ from "lodash";
+
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN as string;
 
 interface MapProps {
@@ -19,7 +25,6 @@ interface MapProps {
 }
 
 const Map: React.FC<MapProps> = ({ movements, layer }) => {
-  const { state } = useContext(GeoStore);
   const { dispatch } = useContext(GeoStore);
   const [map, setMap] = useState<mapboxgl.Map>();
 
@@ -40,6 +45,7 @@ const Map: React.FC<MapProps> = ({ movements, layer }) => {
     });
     setMap(undefined);
 
+    let canvas = map.getCanvas();
     let geolocator = new mapboxgl.GeolocateControl({
       positionOptions: {
         enableHighAccuracy: true,
@@ -54,6 +60,32 @@ const Map: React.FC<MapProps> = ({ movements, layer }) => {
       });
     });
 
+    const setPoint = (lngLat: number[], index: number) => {
+      let searchSource = map.getSource("search-point") as any;
+      let newSearchPoint = _.cloneDeep(searchSource._data);
+      newSearchPoint.features[index] = {
+        type: "Feature",
+        geometry: { type: "Point", coordinates: lngLat },
+      };
+
+      searchSource.setData(newSearchPoint);
+    };
+
+    const clearPoint = () => {
+      let searchSource = map.getSource("search-point") as any;
+      searchSource.setData(initData);
+    };
+
+    const onMove = (e: mapboxgl.MapMouseEvent & mapboxgl.EventData) => {
+      setPoint(e.lngLat.toArray(), 1);
+      let searchSource = map.getSource("search-point") as any;
+      let searchCircle = map.getSource("search-circle") as any;
+      const center = searchSource._data.features[0].geometry.coordinates;
+      const line = turf.lineString([center, e.lngLat.toArray()]);
+      console.log(length(line));
+      searchCircle.setData(turf.circle(center, length(line)));
+    };
+
     map.on("load", () => {
       map.addControl(geolocator);
 
@@ -66,6 +98,11 @@ const Map: React.FC<MapProps> = ({ movements, layer }) => {
         data: initData,
         cluster: true,
       });
+      map.addSource("search-point", {
+        type: "geojson",
+        data: initData,
+      });
+      map.addSource("search-circle", initPoly);
 
       map.addLayer(main);
       map.addLayer(cluster);
@@ -73,6 +110,30 @@ const Map: React.FC<MapProps> = ({ movements, layer }) => {
       map.addLayer(unclustered);
       map.addLayer(heatmap, "waterway-label");
       map.addLayer(heatmapPoint, "waterway-label");
+      map.addLayer(searchCircle);
+      map.addLayer(searchRadius);
+
+      map.on("mousedown", (e) => {
+        e.preventDefault();
+
+        clearPoint();
+        setPoint(e.lngLat.toArray(), 0);
+      });
+
+      map.on("mouseenter", "search-circle", (e) => {
+        canvas.style.cursor = "move";
+      });
+
+      map.on("mousedown", "search-circle", (e) => {
+        map.on("mousemove", onMove);
+        map.once("mouseup", () => {
+          map.off("mousemove", onMove);
+        });
+      });
+
+      map.on("mouseleave", "search-circle", () => {
+        canvas.style.cursor = "";
+      });
 
       setMap(map);
     });
