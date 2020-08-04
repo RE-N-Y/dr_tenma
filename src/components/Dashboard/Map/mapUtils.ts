@@ -7,6 +7,17 @@ export const initData: any = {
   features: [],
 };
 
+export const initPoly: any = {
+  type: "geojson",
+  data: {
+    type: "Feature",
+    geometry: {
+      type: "Polygon",
+      coordinates: [],
+    },
+  },
+};
+
 export const symptomsToGeoJSON = (symptoms: any[]) => {
   let features = symptoms.map((symptom) => {
     let { lat, lon, ...rest } = symptom;

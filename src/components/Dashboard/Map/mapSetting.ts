@@ -132,3 +132,24 @@ export const heatmapPoint: any = {
     "circle-opacity": ["interpolate", ["linear"], ["zoom"], 7, 0, 8, 1],
   },
 };
+
+export const searchCircle: any = {
+  id: "search-circle",
+  type: "circle",
+  source: "search-point",
+  paint: {
+    "circle-radius": 10,
+    "circle-color": "#3887be",
+  },
+};
+
+export const searchRadius: any = {
+  id: "search-radius",
+  type: "fill",
+  source: "search-circle",
+  layout: {},
+  paint: {
+    "fill-color": "#088",
+    "fill-opacity": 0.8,
+  },
+};
