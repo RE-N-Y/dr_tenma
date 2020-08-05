@@ -4,10 +4,12 @@ interface GeoContext {
   longitude: number;
   latitude: number;
   isLoactionOn: boolean;
+  symptomSeries: any;
 }
 
 export enum GeoActionType {
   setLocation = "setLocation",
+  setsymptomSeries = "setsymptomSeries",
 }
 
 interface SetLocationAction {
@@ -16,12 +18,18 @@ interface SetLocationAction {
   latitude: number;
 }
 
-type GeoAction = SetLocationAction;
+interface SetsymptomSeriesAction {
+  type: typeof GeoActionType.setsymptomSeries;
+  symptomSeries: any;
+}
+
+type GeoAction = SetLocationAction | SetsymptomSeriesAction;
 
 const initGeoContext: GeoContext = {
   longitude: 139.7745,
   latitude: 35.7023,
   isLoactionOn: false,
+  symptomSeries: [],
 };
 
 const geoReducer = (state = initGeoContext, action: GeoAction): GeoContext => {
@@ -32,6 +40,11 @@ const geoReducer = (state = initGeoContext, action: GeoAction): GeoContext => {
         longitude: action.longitude,
         latitude: action.latitude,
         isLoactionOn: true,
+      };
+    case GeoActionType.setsymptomSeries:
+      return {
+        ...state,
+        symptomSeries: action.symptomSeries,
       };
     default:
       return state;

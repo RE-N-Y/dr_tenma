@@ -3,12 +3,12 @@ import { Grid } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Appbar from "./../Appbar";
 import MapPanel from "./Map/MapPanel";
-import { GeoProvider } from "../../contexts/geoContext";
 import SymptomForm from "./SymptomForm";
 import SymptomTrend from "./data/SymptomTrend";
 import { API, graphqlOperation } from "aws-amplify";
 import * as queries from "./../../graphql/queries";
 import { AuthStore } from "../../contexts/authContext";
+import { GeoStore, GeoActionType } from "../../contexts/geoContext";
 import Admin from "./Admin";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -31,8 +31,8 @@ interface AdminProps {
 
 const Dashboard: React.FC<AdminProps> = (props) => {
   const classes = useStyles();
-  const { state } = useContext(AuthStore);
-  const [symptomSeries, setsymptomSeries] = useState<any>([]);
+  const authContext = useContext(AuthStore);
+  const geoContext = useContext(GeoStore);
 
   useEffect(() => {
     let fetchSymptomSeries = async (username: string) => {
@@ -41,16 +41,17 @@ const Dashboard: React.FC<AdminProps> = (props) => {
           graphqlOperation(queries.getSymptomSeries, { id: username })
         );
 
-        if (data.getPatient) {
-          setsymptomSeries(data.getPatient.records.items);
-        }
+        geoContext.dispatch({
+          type: GeoActionType.setsymptomSeries,
+          symptomSeries: data.getPatient.records.items,
+        });
       } catch (error) {
         console.log(error);
       }
     };
 
-    fetchSymptomSeries(state.user.username);
-  }, [state.user.username]);
+    fetchSymptomSeries(authContext.state.user.username);
+  }, [authContext.state.user.username]);
 
   const renderPatient = () => {
     return (
@@ -61,7 +62,7 @@ const Dashboard: React.FC<AdminProps> = (props) => {
               title="Fever"
               symptom="fever"
               color="#004c6d"
-              data={symptomSeries}
+              data={geoContext.state.symptomSeries}
             />
           </Grid>
           <Grid item xs={3}>
@@ -69,7 +70,7 @@ const Dashboard: React.FC<AdminProps> = (props) => {
               title="Coughing"
               symptom="coughing"
               color="#427ba0"
-              data={symptomSeries}
+              data={geoContext.state.symptomSeries}
             />
           </Grid>
           <Grid item xs={3}>
@@ -77,7 +78,7 @@ const Dashboard: React.FC<AdminProps> = (props) => {
               title="Breathing"
               symptom="breathing"
               color="#5b93bb"
-              data={symptomSeries}
+              data={geoContext.state.symptomSeries}
             />
           </Grid>
           <Grid item xs={3}>
@@ -85,12 +86,12 @@ const Dashboard: React.FC<AdminProps> = (props) => {
               title="Body Temperature"
               symptom="temperature"
               color="#74add6"
-              data={symptomSeries}
+              data={geoContext.state.symptomSeries}
             />
           </Grid>
         </Grid>
         <Grid item xs={8}>
-          <MapPanel mapProps={{ movements: symptomSeries }} />
+          <MapPanel />
         </Grid>
         <Grid item xs={4}>
           <SymptomForm />
@@ -100,7 +101,7 @@ const Dashboard: React.FC<AdminProps> = (props) => {
   };
 
   return (
-    <GeoProvider>
+    <>
       <Appbar />
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
@@ -108,7 +109,7 @@ const Dashboard: React.FC<AdminProps> = (props) => {
           {props.admin ? <Admin /> : renderPatient()}
         </Grid>
       </main>
-    </GeoProvider>
+    </>
   );
 };
 
