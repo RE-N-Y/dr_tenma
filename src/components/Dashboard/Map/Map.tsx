@@ -22,9 +22,16 @@ mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN as string;
 interface MapProps {
   movements: { location: LocationInput; updatedAt: string }[];
   layer: "main" | "cluster" | "heatmap";
+  searchEnabled: boolean;
+  setSearch: Function;
 }
 
-const Map: React.FC<MapProps> = ({ movements, layer }) => {
+const Map: React.FC<MapProps> = ({
+  movements,
+  layer,
+  searchEnabled,
+  setSearch,
+}) => {
   const { dispatch } = useContext(GeoStore);
   const [map, setMap] = useState<mapboxgl.Map>();
 
@@ -60,11 +67,16 @@ const Map: React.FC<MapProps> = ({ movements, layer }) => {
       });
     });
 
-    const setPoint = (lngLat: number[], index: number) => {
+    const setPoint = (
+      lngLat: number[],
+      index: number,
+      visibility: "visible" | "invisible"
+    ) => {
       let searchSource = map.getSource("search-point") as any;
       let newSearchPoint = _.cloneDeep(searchSource._data);
       newSearchPoint.features[index] = {
         type: "Feature",
+        properties: { visibility },
         geometry: { type: "Point", coordinates: lngLat },
       };
 
@@ -77,13 +89,16 @@ const Map: React.FC<MapProps> = ({ movements, layer }) => {
     };
 
     const onMove = (e: mapboxgl.MapMouseEvent & mapboxgl.EventData) => {
-      setPoint(e.lngLat.toArray(), 1);
+      setPoint(e.lngLat.toArray(), 1, "invisible");
       let searchSource = map.getSource("search-point") as any;
       let searchCircle = map.getSource("search-circle") as any;
       const center = searchSource._data.features[0].geometry.coordinates;
       const line = turf.lineString([center, e.lngLat.toArray()]);
-      console.log(length(line));
-      searchCircle.setData(turf.circle(center, length(line)));
+      try {
+        searchCircle.setData(turf.circle(center, length(line)));
+      } catch (error) {
+        console.log("circle init failed");
+      }
     };
 
     map.on("load", () => {
@@ -114,10 +129,14 @@ const Map: React.FC<MapProps> = ({ movements, layer }) => {
       map.addLayer(searchRadius);
 
       map.on("mousedown", (e) => {
-        e.preventDefault();
+        if (
+          map.getLayoutProperty("search-circle", "visibility") === "visible"
+        ) {
+          e.preventDefault();
 
-        clearPoint();
-        setPoint(e.lngLat.toArray(), 0);
+          clearPoint();
+          setPoint(e.lngLat.toArray(), 0, "visible");
+        }
       });
 
       map.on("mouseenter", "search-circle", (e) => {
@@ -132,7 +151,15 @@ const Map: React.FC<MapProps> = ({ movements, layer }) => {
       });
 
       map.on("mouseleave", "search-circle", () => {
+        let searchSource = map.getSource("search-point") as any;
         canvas.style.cursor = "";
+        if (searchSource._data.features.length === 2) {
+          const center = searchSource._data.features[0].geometry.coordinates;
+          const edge = searchSource._data.features[1].geometry.coordinates;
+          const line = turf.lineString([center, edge]);
+
+          setSearch({ lat: center[1], lon: center[0], radius: length(line) });
+        }
       });
 
       setMap(map);
@@ -154,6 +181,7 @@ const Map: React.FC<MapProps> = ({ movements, layer }) => {
           };
         })
     );
+
     let pointSource = map.getSource("symptoms") as mapboxgl.GeoJSONSource;
     let clusterSource = map.getSource(
       "symptoms-cluster"
@@ -176,6 +204,14 @@ const Map: React.FC<MapProps> = ({ movements, layer }) => {
     map.setLayoutProperty("symptoms-heat", "visibility", heatmapVisibility);
     map.setLayoutProperty("symptoms-point", "visibility", heatmapVisibility);
   }, [map, layer]);
+
+  useEffect(() => {
+    if (!map) return;
+
+    const visibility = searchEnabled ? "visible" : "none";
+    map.setLayoutProperty("search-circle", "visibility", visibility);
+    map.setLayoutProperty("search-radius", "visibility", visibility);
+  }, [map, searchEnabled]);
 
   return (
     <>

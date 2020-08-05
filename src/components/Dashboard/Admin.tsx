@@ -1,14 +1,13 @@
 import React, { useEffect, useState, useContext } from "react";
 import { API, Auth, graphqlOperation } from "aws-amplify";
 import * as queries from "./../../graphql/queries";
-import { GeoStore } from "../../contexts/geoContext";
+import { GeoStore, GeoActionType } from "../../contexts/geoContext";
 import { Grid, Button } from "@material-ui/core";
 import MapPanel from "./Map/MapPanel";
 
 const Admin: React.FC = () => {
-  const { state } = useContext(GeoStore);
+  const { state, dispatch } = useContext(GeoStore);
   const [patientIDs, setPatientIDs] = useState([]);
-  const [symptomSeries, setsymptomSeries] = useState<any>([]);
 
   useEffect(() => {
     let listPatients = async () => {
@@ -35,14 +34,17 @@ const Admin: React.FC = () => {
     listPatients();
   }, []);
 
-  const fetchSymptoms = async () => {
+  const fetchNearBySymptoms = async () => {
     try {
       const result: any = await API.graphql(
         graphqlOperation(queries.nearbySymptoms, {
           location: { lat: state.latitude, lon: state.longitude },
         })
       );
-      setsymptomSeries(result.data.nearbySymptoms.items);
+      dispatch({
+        type: GeoActionType.setsymptomSeries,
+        symptomSeries: result.data.nearbySymptoms.items,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -52,8 +54,8 @@ const Admin: React.FC = () => {
     <>
       <Grid container item spacing={2}>
         <Grid item xs={8}>
-          <MapPanel mapProps={{ movements: symptomSeries }} />
-          <Button onClick={fetchSymptoms}>Get Nearby cases</Button>
+          <MapPanel />
+          <Button onClick={fetchNearBySymptoms}>Get Nearby cases</Button>
         </Grid>
         <Grid item xs={4}></Grid>
       </Grid>

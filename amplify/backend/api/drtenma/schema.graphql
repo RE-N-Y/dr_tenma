@@ -2,12 +2,12 @@ type Patient
   @model
   @auth(
     rules: [
+      { allow: owner }
       {
         allow: groups
         groups: ["admin", "manager"]
         operations: [create, update, delete, read]
       }
-      { allow: owner, operations: [create, read] }
     ]
   ) {
   id: ID!
@@ -18,20 +18,20 @@ type Patient
 
 type Symptom
   @model
-  @searchable
-  @key(name: "bySeverity", fields: ["severity"])
-  @key(name: "byTime", fields: ["createdAt"])
-  @key(name: "byPatient", fields: ["patientID"])
   @auth(
     rules: [
+      { allow: owner }
       {
         allow: groups
         groups: ["admin", "manager"]
         operations: [create, update, delete, read]
       }
-      { allow: owner, operations: [create, read] }
     ]
-  ) {
+  )
+  @searchable
+  @key(name: "bySeverity", fields: ["severity"])
+  @key(name: "byTime", fields: ["createdAt"])
+  @key(name: "byPatient", fields: ["patientID"]) {
   id: ID!
   patientID: ID!
   fever: Int!

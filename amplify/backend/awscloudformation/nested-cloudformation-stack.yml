@@ -199,7 +199,7 @@
 						]
 					},
 					"S3DeploymentBucket": "amplify-drchatbot-dev-180525-deployment",
-					"S3DeploymentRootKey": "amplify-appsync-files/8a61b1f26df32da34e0236e15658d6a68dbfce4c",
+					"S3DeploymentRootKey": "amplify-appsync-files/f135b97d21a987b543468e2512e846dbda6f2548",
 					"env": "dev"
 				}
 			}

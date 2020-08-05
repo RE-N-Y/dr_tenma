@@ -138,8 +138,14 @@ export const searchCircle: any = {
   type: "circle",
   source: "search-point",
   paint: {
-    "circle-radius": 10,
-    "circle-color": "#3887be",
+    "circle-radius": 5,
+    "circle-color": [
+      "match",
+      ["get", "visibility"],
+      "visible",
+      "#000000",
+      "transparent",
+    ],
   },
 };
 
@@ -149,7 +155,7 @@ export const searchRadius: any = {
   source: "search-circle",
   layout: {},
   paint: {
-    "fill-color": "#088",
+    "fill-color": "#ba000d",
     "fill-opacity": 0.8,
   },
 };

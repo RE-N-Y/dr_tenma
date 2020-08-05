@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { AuthState, AuthStore, AuthActionType } from "../contexts/authContext";
+import { GeoProvider } from "../contexts/geoContext";
 import { CssBaseline } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Authenticator from "./Auth/Authenticator";
@@ -89,11 +90,13 @@ const App: React.FC = () => {
     <div className={classes.root}>
       <CssBaseline />
       {state.authState === AuthState.SignedIn && state.user ? (
-        <Dashboard
-          admin={state.user?.signInUserSession.idToken.payload[
-            "cognito:groups"
-          ].includes("admin")}
-        />
+        <GeoProvider>
+          <Dashboard
+            admin={state.user?.signInUserSession.idToken.payload[
+              "cognito:groups"
+            ].includes("admin")}
+          />
+        </GeoProvider>
       ) : (
         <Authenticator />
       )}
