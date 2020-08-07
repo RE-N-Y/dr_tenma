@@ -7,6 +7,7 @@ import {
   AuthState,
   AuthActionType,
 } from "../../contexts/authContext";
+import { MessageStore, MessageActionType } from "../../contexts/messageContext";
 import { Box, Button, Divider, Link, Typography } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
@@ -24,21 +25,25 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Signin: React.FC = () => {
-  const { state, dispatch } = useContext(AuthStore);
+  const authContext = useContext(AuthStore);
+  const messageContext = useContext(MessageStore);
   const classes = useStyles();
 
   const handleSubmit = async (values: any) => {
     try {
       const user = await Auth.signIn(values.email, values.password);
-      dispatch({ type: AuthActionType.setUser, payload: user });
+      authContext.dispatch({ type: AuthActionType.setUser, payload: user });
 
-      if (state.authState === AuthState.CompletePassword) {
+      if (authContext.state.authState === AuthState.CompletePassword) {
         await Auth.completeNewPassword(user, values.password, {
           email: values.email,
         });
       }
     } catch (error) {
-      console.log(error);
+      messageContext.dispatch({
+        type: MessageActionType.setMessage,
+        payload: error.message,
+      });
     }
   };
 
@@ -89,7 +94,7 @@ const Signin: React.FC = () => {
           <Link
             href="#"
             onClick={() => {
-              dispatch({
+              authContext.dispatch({
                 type: AuthActionType.setAuthState,
                 payload: AuthState.SignUp,
               });
@@ -100,7 +105,7 @@ const Signin: React.FC = () => {
           <Link
             href="#"
             onClick={() => {
-              dispatch({
+              authContext.dispatch({
                 type: AuthActionType.setAuthState,
                 payload: AuthState.ResetPassword,
               });

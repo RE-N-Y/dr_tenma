@@ -8,6 +8,7 @@ import { AuthProvider } from "./contexts/authContext";
 import { ThemeProvider } from "@material-ui/core";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { indigo, yellow } from "@material-ui/core/colors";
+import { MessageProvider } from "./contexts/messageContext";
 
 Amplify.configure(awsExports);
 
@@ -25,7 +26,9 @@ const theme = createMuiTheme({
 ReactDOM.render(
   <AuthProvider>
     <ThemeProvider theme={theme}>
-      <App />
+      <MessageProvider>
+        <App />
+      </MessageProvider>
     </ThemeProvider>
   </AuthProvider>,
   document.getElementById("root")

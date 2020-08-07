@@ -5,9 +5,11 @@ import { Button, Typography } from "@material-ui/core";
 import * as yup from "yup";
 import { Auth } from "aws-amplify";
 import { AuthStore, AuthActionType } from "../../contexts/authContext";
+import { MessageStore, MessageActionType } from "../../contexts/messageContext";
 
 const Signup: React.FC = () => {
-  const { dispatch } = useContext(AuthStore);
+  const authContext = useContext(AuthStore);
+  const messageContext = useContext(MessageStore);
 
   const handleSubmit = async (values: any) => {
     try {
@@ -18,12 +20,15 @@ const Signup: React.FC = () => {
           email: values.email,
         },
       });
-      dispatch({
+      authContext.dispatch({
         type: AuthActionType.setSignupInput,
         payload: { email: values.email, password: values.password },
       });
     } catch (error) {
-      console.log(error);
+      messageContext.dispatch({
+        type: MessageActionType.setMessage,
+        payload: error.message,
+      });
     }
   };
 

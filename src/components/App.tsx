@@ -1,13 +1,14 @@
 import React, { useContext, useEffect } from "react";
 import { AuthState, AuthStore, AuthActionType } from "../contexts/authContext";
 import { GeoProvider } from "../contexts/geoContext";
-import { CssBaseline } from "@material-ui/core";
+import { CssBaseline, Snackbar } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Authenticator from "./Auth/Authenticator";
 import Dashboard from "./Dashboard/Dashboard";
 
 import { Auth } from "aws-amplify";
 import { Hub, HubCapsule } from "@aws-amplify/core";
+import { MessageStore, MessageActionType } from "../contexts/messageContext";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -18,26 +19,38 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const App: React.FC = () => {
-  const { state, dispatch } = useContext(AuthStore);
+  const authContext = useContext(AuthStore);
+  const messageContext = useContext(MessageStore);
 
   const classes = useStyles();
+
+  const handleClose = () => {
+    messageContext.dispatch({
+      type: MessageActionType.setMessage,
+      payload: "",
+    });
+  };
 
   useEffect(() => {
     let initAuth = async () => {
       try {
         const user = await Auth.currentUserPoolUser();
-        dispatch({ type: AuthActionType.setUser, payload: user });
-        dispatch({
+        authContext.dispatch({ type: AuthActionType.setUser, payload: user });
+        authContext.dispatch({
           type: AuthActionType.setAuthState,
           payload: AuthState.SignedIn,
         });
       } catch (error) {
+        messageContext.dispatch({
+          type: MessageActionType.setMessage,
+          payload: error,
+        });
         console.log(error);
       }
     };
 
     initAuth();
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     let updateAuth = async (data: HubCapsule) => {
@@ -45,36 +58,39 @@ const App: React.FC = () => {
       console.log({ event, message });
       switch (event) {
         case "signIn":
-          dispatch({
+          authContext.dispatch({
             type: AuthActionType.setAuthState,
             payload: AuthState.SignedIn,
           });
-          dispatch({
+          authContext.dispatch({
             type: AuthActionType.setUser,
             payload: await Auth.currentAuthenticatedUser(),
           });
           break;
         case "signUp":
-          dispatch({
+          authContext.dispatch({
             type: AuthActionType.setAuthState,
             payload: AuthState.ConfirmSignUp,
           });
           break;
         case "signOut":
-          dispatch({
+          authContext.dispatch({
             type: AuthActionType.setAuthState,
             payload: AuthState.Signin,
           });
-          dispatch({ type: AuthActionType.setUser, payload: undefined });
+          authContext.dispatch({
+            type: AuthActionType.setUser,
+            payload: undefined,
+          });
           break;
         case "forgotPassword":
-          dispatch({
+          authContext.dispatch({
             type: AuthActionType.setAuthState,
             payload: AuthState.ConfirmResetPassword,
           });
           break;
         case "forgotPasswordSubmit":
-          dispatch({
+          authContext.dispatch({
             type: AuthActionType.setAuthState,
             payload: AuthState.CompletePassword,
           });
@@ -84,15 +100,16 @@ const App: React.FC = () => {
 
     Hub.listen("auth", updateAuth);
     return () => Hub.remove("auth", updateAuth);
-  }, [dispatch]);
+  }, []);
 
   return (
     <div className={classes.root}>
       <CssBaseline />
-      {state.authState === AuthState.SignedIn && state.user ? (
+      {authContext.state.authState === AuthState.SignedIn &&
+      authContext.state.user ? (
         <GeoProvider>
           <Dashboard
-            admin={state.user?.signInUserSession.idToken.payload[
+            admin={authContext.state.user?.signInUserSession.idToken.payload[
               "cognito:groups"
             ].includes("admin")}
           />
@@ -100,6 +117,13 @@ const App: React.FC = () => {
       ) : (
         <Authenticator />
       )}
+      <Snackbar
+        open={messageContext.state.message !== ""}
+        autoHideDuration={5000}
+        message={messageContext.state.message}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+      />
     </div>
   );
 };
