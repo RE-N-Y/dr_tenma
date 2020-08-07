@@ -2,12 +2,13 @@ import React, { useEffect, useState, useContext } from "react";
 import { API, Auth, graphqlOperation } from "aws-amplify";
 import * as queries from "./../../graphql/queries";
 import { GeoStore, GeoActionType } from "../../contexts/geoContext";
-import { Grid, Button } from "@material-ui/core";
+import { Grid, Button, Typography } from "@material-ui/core";
 import MapPanel from "./Map/MapPanel";
+import PatientInfo from "./PatientInfo";
 
 const Admin: React.FC = () => {
-  const { state, dispatch } = useContext(GeoStore);
-  const [patientIDs, setPatientIDs] = useState([]);
+  const geoContext = useContext(GeoStore);
+  const [patients, setPatients] = useState<any[]>([]);
 
   useEffect(() => {
     let listPatients = async () => {
@@ -25,10 +26,13 @@ const Admin: React.FC = () => {
         },
       };
       let result = await API.get(apiName, path, myInit);
-      const ids = result.Users.map((patient: any) => {
-        return patient.Username;
+      const patientInfo = result.Users.map((patient: any) => {
+        return {
+          username: patient.Username,
+          email: patient.Attributes[2].Value,
+        };
       });
-      setPatientIDs(ids);
+      setPatients(patientInfo);
     };
 
     listPatients();
@@ -38,10 +42,13 @@ const Admin: React.FC = () => {
     try {
       const result: any = await API.graphql(
         graphqlOperation(queries.nearbySymptoms, {
-          location: { lat: state.latitude, lon: state.longitude },
+          location: {
+            lat: geoContext.state.latitude,
+            lon: geoContext.state.longitude,
+          },
         })
       );
-      dispatch({
+      geoContext.dispatch({
         type: GeoActionType.setsymptomSeries,
         symptomSeries: result.data.nearbySymptoms.items,
       });
@@ -53,11 +60,18 @@ const Admin: React.FC = () => {
   return (
     <>
       <Grid container item spacing={2}>
-        <Grid item xs={8}>
+        <Grid item xs={7}>
           <MapPanel />
           <Button onClick={fetchNearBySymptoms}>Get Nearby cases</Button>
         </Grid>
-        <Grid item xs={4}></Grid>
+        <Grid item xs={5}>
+          <Typography variant="h6">Your Patients</Typography>
+          {patients.map(({ username, email }) => {
+            return (
+              <PatientInfo key={email} username={username} email={email} />
+            );
+          })}
+        </Grid>
       </Grid>
     </>
   );
