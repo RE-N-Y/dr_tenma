@@ -1,16 +1,22 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Formik, Form, Field } from "formik";
 import { Button, Typography } from "@material-ui/core";
 import { TextField } from "formik-material-ui";
 import * as yup from "yup";
 import { Auth } from "aws-amplify";
+import { MessageStore, MessageActionType } from "../../contexts/messageContext";
 
 const ResetPassword: React.FC = () => {
+  const { dispatch } = useContext(MessageStore);
+
   const handleSubmit = async (values: any) => {
     try {
       await Auth.forgotPassword(values.email);
     } catch (error) {
-      console.log(error);
+      dispatch({
+        type: MessageActionType.setMessage,
+        payload: error.message,
+      });
     }
   };
 

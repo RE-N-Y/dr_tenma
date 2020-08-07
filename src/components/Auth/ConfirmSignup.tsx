@@ -11,14 +11,16 @@ import {
 import { Auth, API, graphqlOperation } from "aws-amplify";
 import * as mutations from "./../../graphql/mutations";
 import { Button } from "@material-ui/core";
+import { MessageStore, MessageActionType } from "../../contexts/messageContext";
 
 const ConfirmSignup: React.FC = () => {
-  const { state, dispatch } = useContext(AuthStore);
+  const authContext = useContext(AuthStore);
+  const messageContext = useContext(MessageStore);
 
   const handleSubmit = async (values: any) => {
     try {
-      let email = state.signupInput?.email as string;
-      let password = state.signupInput?.password as string;
+      let email = authContext.state.signupInput?.email as string;
+      let password = authContext.state.signupInput?.password as string;
 
       await Auth.confirmSignUp(email, values.confirmationCode);
       await Auth.signIn(email, password);
@@ -31,17 +33,20 @@ const ConfirmSignup: React.FC = () => {
         })
       );
 
-      dispatch({
+      authContext.dispatch({
         type: AuthActionType.setAuthState,
         payload: AuthState.SignedIn,
       });
 
-      dispatch({
+      authContext.dispatch({
         type: AuthActionType.setSignupInput,
         payload: undefined,
       });
     } catch (error) {
-      console.log(error);
+      messageContext.dispatch({
+        type: MessageActionType.setMessage,
+        payload: error.message,
+      });
     }
   };
 
