@@ -21,6 +21,7 @@ import {
   TableHead,
   Chip,
   Box,
+  Divider,
 } from "@material-ui/core";
 import { API, graphqlOperation } from "aws-amplify";
 import { ExpandLess, ExpandMore, PriorityHighSharp } from "@material-ui/icons";
@@ -38,6 +39,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     chip: {
       margin: theme.spacing(1),
+    },
+    displayButton: {
+      marginLeft: theme.spacing(1),
+      marginTop: theme.spacing(2),
     },
   })
 );
@@ -64,14 +69,21 @@ const PatientInfo: React.FC<PatientInfoProps> = ({ username, email }) => {
       fetchUser();
     }
     setExpanded(!expanded);
-    console.log(patient);
   };
 
-  const displaySymptoms = () => {
-    geoContext.dispatch({
-      type: GeoActionType.setsymptomSeries,
-      symptomSeries: patient.records.items,
-    });
+  const displaySymptoms = async () => {
+    try {
+      const { data }: any = await API.graphql(
+        graphqlOperation(queries.getSymptomSeries, { id: username })
+      );
+      geoContext.dispatch({
+        type: GeoActionType.setsymptomSeries,
+        symptomSeries: data.getPatient.records.items,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    
   };
 
   const columns = ["fever", "breathing", "coughing", "temperature"];
@@ -104,7 +116,7 @@ const PatientInfo: React.FC<PatientInfoProps> = ({ username, email }) => {
   const getSeriesAvg = (items: any[], column: string): number => {
     const filteredItems = items.map((item) => item[column]);
     const avg: number =
-      filteredItems.reduce((prev, curr) => prev + curr) / filteredItems.length;
+      filteredItems.reduce((prev, curr) => prev + curr, 0) / filteredItems.length;
     return avg;
   };
 
@@ -124,11 +136,13 @@ const PatientInfo: React.FC<PatientInfoProps> = ({ username, email }) => {
           </IconButton>
         }
       />
+      <Divider/>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         {patient ? (
           <>
             <CardContent>
-              <Box display="flex" justifyContent="space-between">
+            <Typography variant="h6">Overview</Typography>
+              <Box m={2} display="flex" justifyContent="space-between">
                 <Box>
                   <Typography variant="subtitle1">{`Email: ${email}`}</Typography>
                   <Typography variant="subtitle1">{`Registered Symptoms: ${patient.records.items.length}`}</Typography>
@@ -184,7 +198,7 @@ const PatientInfo: React.FC<PatientInfoProps> = ({ username, email }) => {
                   </TableBody>
                 </Table>
               </TableContainer>
-              <Button onClick={displaySymptoms}>Display symptoms</Button>
+              <Button className={classes.displayButton} variant="outlined" onClick={displaySymptoms}>Display symptoms</Button>
             </CardContent>
           </>
         ) : (
