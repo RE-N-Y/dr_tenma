@@ -43,6 +43,7 @@ const ResetPassword: React.FC = () => {
           <Form>
             <Field
               name="email"
+              color="secondary"
               fullWidth
               label="Password Reset Email"
               component={TextField}

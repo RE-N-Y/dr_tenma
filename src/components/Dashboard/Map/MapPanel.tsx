@@ -5,14 +5,14 @@ import {
   Typography,
   Select,
   MenuItem,
-  Button,
-  Switch,
+  IconButton,
 } from "@material-ui/core";
 import Map from "./Map";
 import { API, graphqlOperation } from "aws-amplify";
 import * as queries from "./../../../graphql/queries";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { GeoStore, GeoActionType } from "../../../contexts/geoContext";
+import { Search } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -50,28 +50,35 @@ const MapPanel: React.FC = () => {
     setLayer(event.target.value as LayerOptions);
   };
 
-  const handleToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchEnabled(!searchEnabled);
-  };
-
   const searchSymptomsInRadius = async () => {
-    if (!search) return;
-
-    try {
-      const result: any = await API.graphql(
-        graphqlOperation(queries.nearbySymptoms, {
-          location: { lat: search.lat, lon: search.lon },
-          m: Math.round(search.radius * 1000),
-        })
-      );
-      dispatch({
-        type: GeoActionType.setsymptomSeries,
-        symptomSeries: result.data.nearbySymptoms.items,
-      });
-    } catch (error) {
-      console.log(error);
+    setSearchEnabled(!searchEnabled);
+    if (search) {
+      try {
+        const result: any = await API.graphql(
+          graphqlOperation(queries.nearbySymptoms, {
+            location: { lat: search.lat, lon: search.lon },
+            m: Math.round(search.radius * 1000),
+          })
+        );
+        dispatch({
+          type: GeoActionType.setsymptomSeries,
+          symptomSeries: result.data.nearbySymptoms.items,
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
+
+  const setSearchColor = () => {
+    if(searchEnabled && search) {
+      return "secondary";
+    } else if(searchEnabled) {
+      return "secondary";
+    } else {
+      return "default";
+    }
+  }
 
   return (
     <>
@@ -79,15 +86,18 @@ const MapPanel: React.FC = () => {
         <Typography variant="h6" className={classes.title}>
           Activities
         </Typography>
-        {searchEnabled && (
-          <Button onClick={searchSymptomsInRadius}>Scan Activities</Button>
-        )}
-        <Switch checked={searchEnabled} onChange={handleToggle} />
-        <Select value={layer} onChange={handleChange}>
-          <MenuItem value="main">Main</MenuItem>
-          <MenuItem value="heatmap">Heatmap</MenuItem>
-          <MenuItem value="cluster">Cluster</MenuItem>
-        </Select>
+        <Box marginRight={2}>
+          <IconButton size="small" onClick={searchSymptomsInRadius} color={setSearchColor()}>
+            <Search/>
+          </IconButton>
+        </Box>
+        <Box marginRight={2}>
+          <Select value={layer} onChange={handleChange}>
+            <MenuItem value="main">Main</MenuItem>
+            <MenuItem value="heatmap">Heatmap</MenuItem>
+            <MenuItem value="cluster">Cluster</MenuItem>
+          </Select>
+        </Box>
       </Box>
 
       <Paper className={classes.mapPanel}>

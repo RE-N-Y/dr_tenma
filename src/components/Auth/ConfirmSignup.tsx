@@ -69,6 +69,7 @@ const ConfirmSignup: React.FC = () => {
           <Field
             name="confirmationCode"
             label="Confirmation Code"
+            color="secondary"
             fullWidth
             component={TextField}
           />

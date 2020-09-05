@@ -14,6 +14,7 @@ Amplify.configure(awsExports);
 
 const theme = createMuiTheme({
   palette: {
+    type: "dark",
     primary: {
       main: indigo[900],
     },
