@@ -7,7 +7,7 @@ import {
   YAxis,
   Tooltip,
 } from "recharts";
-import { Typography, Paper, Divider } from "@material-ui/core";
+import { Box, Typography, Paper, Divider } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
 interface SymptomTrendProps {
@@ -41,6 +41,24 @@ const SymptomTrend: React.FC<SymptomTrendProps> = ({
     updatedAt: new Date(symptom.updatedAt).toLocaleDateString("en-US"),
   }));
 
+  const tooltip = (tooltipProps:any) => {
+    if(tooltipProps.payload.length > 0) {
+      const data = tooltipProps.payload[0];
+
+      return (
+        <Paper>
+          <Box p={2}>
+            <Typography>{data.payload[data.dataKey]}</Typography>
+            <Typography variant="caption">{tooltipProps.label}</Typography>
+          </Box>
+        </Paper>
+      );
+    } else {
+      return null;
+    }
+    
+  }
+
   return (
     <Paper className={classes.container}>
       <Typography variant="h6">{title}</Typography>
@@ -60,7 +78,7 @@ const SymptomTrend: React.FC<SymptomTrendProps> = ({
               padding={{ top: 20, bottom: 20 }}
               hide
             />
-            <Tooltip />
+            <Tooltip content={tooltip}/>
             <Line
               type="monotone"
               stroke={color}

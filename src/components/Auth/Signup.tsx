@@ -59,10 +59,11 @@ const Signup: React.FC = () => {
       >
         {({ isSubmitting }) => (
           <Form>
-            <Field name="email" label="Email" fullWidth component={TextField} />
+            <Field name="email" label="Email" color="secondary" fullWidth component={TextField} />
             <Field
               name="password"
               type="password"
+              color="secondary"
               label="Password"
               fullWidth
               component={TextField}
@@ -70,6 +71,7 @@ const Signup: React.FC = () => {
             <Field
               name="passwordConfirmation"
               type="password"
+              color="secondary"
               label="Confirm Password"
               fullWidth
               component={TextField}

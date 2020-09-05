@@ -73,12 +73,14 @@ const Signin: React.FC = () => {
               <Field
                 name="email"
                 label="Email"
+                color="secondary"
                 fullWidth
                 component={TextField}
               />
               <Field
                 name="password"
                 type="password"
+                color="secondary"
                 label="Password"
                 fullWidth
                 component={TextField}
@@ -93,6 +95,7 @@ const Signin: React.FC = () => {
         <Box className={classes.footer}>
           <Link
             href="#"
+            color="textSecondary"
             onClick={() => {
               authContext.dispatch({
                 type: AuthActionType.setAuthState,
@@ -104,6 +107,7 @@ const Signin: React.FC = () => {
           </Link>
           <Link
             href="#"
+            color="textSecondary"
             onClick={() => {
               authContext.dispatch({
                 type: AuthActionType.setAuthState,

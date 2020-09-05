@@ -139,6 +139,7 @@ const SymptomForm: React.FC = () => {
               <Typography variant="subtitle1">Fever</Typography>
               <Slider
                 name="fever"
+                color="secondary"
                 onChange={(event, value) => {
                   setFieldValue("fever", value);
                 }}
@@ -149,6 +150,7 @@ const SymptomForm: React.FC = () => {
               <Typography variant="subtitle1">Coughing</Typography>
               <Slider
                 name="coughing"
+                color="secondary"
                 onChange={(event, value) => {
                   setFieldValue("coughing", value);
                 }}
@@ -159,6 +161,7 @@ const SymptomForm: React.FC = () => {
               <Typography variant="subtitle1">Breathing</Typography>
               <Slider
                 name="breathing"
+                color="secondary"
                 onChange={(event, value) => {
                   setFieldValue("breathing", value);
                 }}
@@ -169,6 +172,7 @@ const SymptomForm: React.FC = () => {
               <Typography variant="subtitle1">Sore Throat</Typography>
               <Slider
                 name="soreThroat"
+                color="secondary"
                 onChange={(event, value) => {
                   setFieldValue("soreThroat", value);
                 }}
@@ -179,6 +183,7 @@ const SymptomForm: React.FC = () => {
               <Typography variant="subtitle1">Allergy</Typography>
               <Slider
                 name="allergies"
+                color="secondary"
                 onChange={(event, value) => {
                   setFieldValue("allergies", value);
                 }}
@@ -189,6 +194,7 @@ const SymptomForm: React.FC = () => {
               <Typography variant="subtitle1">Aching Body</Typography>
               <Slider
                 name="bodyAches"
+                color="secondary"
                 onChange={(event, value) => {
                   setFieldValue("bodyAches", value);
                 }}
@@ -199,6 +205,7 @@ const SymptomForm: React.FC = () => {
               <Typography variant="subtitle1">Body Temperature</Typography>
               <Slider
                 name="temperature"
+                color="secondary"
                 onChange={(event, value) => {
                   setFieldValue("temperature", value);
                 }}
@@ -211,6 +218,7 @@ const SymptomForm: React.FC = () => {
               />
               <Field
                 name="note"
+                color="secondary"
                 label="Notes"
                 multiline
                 rows={4}

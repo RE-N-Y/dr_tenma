@@ -61,7 +61,7 @@ const Dashboard: React.FC<AdminProps> = (props) => {
             <SymptomTrend
               title="Fever"
               symptom="fever"
-              color="#004c6d"
+              color="#ffeb3b"
               data={geoContext.state.symptomSeries}
             />
           </Grid>
@@ -69,7 +69,7 @@ const Dashboard: React.FC<AdminProps> = (props) => {
             <SymptomTrend
               title="Coughing"
               symptom="coughing"
-              color="#427ba0"
+              color="#ffeb3b"
               data={geoContext.state.symptomSeries}
             />
           </Grid>
@@ -77,7 +77,7 @@ const Dashboard: React.FC<AdminProps> = (props) => {
             <SymptomTrend
               title="Breathing"
               symptom="breathing"
-              color="#5b93bb"
+              color="#ffeb3b"
               data={geoContext.state.symptomSeries}
             />
           </Grid>
@@ -85,7 +85,7 @@ const Dashboard: React.FC<AdminProps> = (props) => {
             <SymptomTrend
               title="Body Temperature"
               symptom="temperature"
-              color="#74add6"
+              color="#ffeb3b"
               data={geoContext.state.symptomSeries}
             />
           </Grid>

@@ -65,24 +65,28 @@ const ConfirmNewPassword: React.FC = () => {
           <Form>
             <Field
               name="email"
+              color="secondary"
               fullWidth
               label="Password Reset Email"
               component={TextField}
             />
             <Field
               name="confirmationCode"
+              color="secondary"
               fullWidth
               label="Confirmation Code"
               component={TextField}
             />
             <Field
               name="newPassword"
+              color="secondary"
               fullWidth
               label="New Password"
               component={TextField}
             />
             <Field
               name="confirmNewPassword"
+              color="secondary"
               fullWidth
               label="Confirm New Password"
               component={TextField}

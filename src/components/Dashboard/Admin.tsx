@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { API, Auth, graphqlOperation } from "aws-amplify";
 import * as queries from "./../../graphql/queries";
 import { GeoStore, GeoActionType } from "../../contexts/geoContext";
-import { Grid, Button, Typography } from "@material-ui/core";
+import { Box, Grid, Button, Typography } from "@material-ui/core";
 import MapPanel from "./Map/MapPanel";
 import PatientInfo from "./PatientInfo";
 
@@ -62,7 +62,9 @@ const Admin: React.FC = () => {
       <Grid container item spacing={2}>
         <Grid item xs={7}>
           <MapPanel />
-          <Button onClick={fetchNearBySymptoms}>Get Nearby cases</Button>
+          <Box m={2}>
+          <Button variant="contained" onClick={fetchNearBySymptoms}>Get Nearby cases</Button>
+          </Box>
         </Grid>
         <Grid item xs={5}>
           <Typography variant="h6">Your Patients</Typography>

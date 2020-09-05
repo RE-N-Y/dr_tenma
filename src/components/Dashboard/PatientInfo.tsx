@@ -202,7 +202,7 @@ const PatientInfo: React.FC<PatientInfoProps> = ({ username, email }) => {
             </CardContent>
           </>
         ) : (
-          <LinearProgress />
+          <LinearProgress color="secondary"/>
         )}
       </Collapse>
     </Card>
