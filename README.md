@@ -24,8 +24,39 @@ Yet, another AWS amplify web application for tracking COVID patient symptoms and
 - **Forms**: Formik, Yup
 - **Map**: Mapbox
 
-## Demo + Screenshot
+## Demo
 
+[Demo website](https://master.d1lqtanklb56dq.amplifyapp.com/)
+
+**Username**: drtenma
+
+**Password**: monster
+
+### Demo crentials
+
+**Client**:
+
+Email: 9b68195e-2f23-4d73-a612-6057557f9be0@mailslurp.com
+Password: YourPassword1!
+
+**Admin**:
+
+Email: ef25fbb3-7db4-478b-aae3-38a371c1368e@mailslurp.com
+Password: YourPassword1!
+
+## Screenshots
+
+### Admin Dashboard
+
+![admin](images/admin.png)
+
+### Client Dashboard
+
+![client](images/client.png)
+
+### Geoquery
+
+![geoquery](images/geoquery.png)
 
 ## Motivation
 
@@ -34,6 +65,8 @@ Universities and governments have been developing web applications and mobile ap
 ## Tech-stack comparison and review
 
 ### Firebase v.s. AWS amplify
+
+![versus](images/backend.png)
 
 As of September 2020, clear winner is **Firebase**. For readers who are not aware of Firebase and AWS amplify, they are BaaS service provided by Google and AWS. Firebase started out as a real-time database provider, but was acquired by Google and extended their services as BaaS provider. AWS amplify was a service announced 2~3 years ago for quickly prototyping web/mobile application in AWS.
 
@@ -64,6 +97,8 @@ Note that comparisons below are based on my experience and may not reflect the w
 In that regard, Firebase may have couple of limitations and features, but they do a much better job in terms of abstraction. I've been working with Firebase for a few years, but I don't think I rarely visited Google Cloud Project console tied to my Firebase project. Most of my activities were confined to **firebase console, firebase documentation, and my text editor**.
 
 ### Formik + Yup
+
+![formik](images/formik.png)
 
 Since the dawn of internet, **_forms_** have been main source of pain and suffering for web developers. Usually, writing form breaks down into 3 main components:
 
@@ -142,5 +177,7 @@ The official [tutorial guide](https://formik.org/docs/tutorial) from Formik webs
 3. Will self-document your code
 
 ### Mapbox vs Google Maps
+
+![map](images/map.png)
 
 For me, the clear winner was [Mapbox](https://www.mapbox.com/). Although Google Maps does provide some basic functionality and community-supported react bindings, the official documentation mostly focused on embedding google maps on **static pages**. On the other hand, mapbox's documentation and sdk was much more developer-friendly. **Mapbox has their own npm module out of the box, but Google map doesn't**. On top of that good documentation, crsip UI, their website has guides to pretty much all basic ~ advanced examples.
