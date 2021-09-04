@@ -14,7 +14,7 @@ Yet, another AWS amplify web application for tracking COVID patient symptoms and
 
 - **Authentication**: AWS Cognito
 - **Database**: GraphQL DB managed by AWS AppSync
-- **Geolocation query**: ElasticSearch
+- **Geolocation query**: ElasticSearch (**UPDATE** Currently shut down due to billing)
 - **Custom backend functions**: AWS Lambda
 
 ### Client

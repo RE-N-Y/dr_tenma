@@ -63,7 +63,7 @@ const Admin: React.FC = () => {
         <Grid item xs={7}>
           <MapPanel />
           <Box m={2}>
-          <Button variant="contained" onClick={fetchNearBySymptoms}>Get Nearby cases</Button>
+          {/* <Button variant="contained" onClick={fetchNearBySymptoms}>Get Nearby cases</Button> */}
           </Box>
         </Grid>
         <Grid item xs={5}>
