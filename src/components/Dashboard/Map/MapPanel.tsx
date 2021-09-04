@@ -42,7 +42,7 @@ const MapPanel: React.FC = () => {
 
   const [layer, setLayer] = useState<LayerOptions>("main");
   const [search, setSearch] = useState<SearchParams>();
-  const [searchEnabled, setSearchEnabled] = useState<boolean>(true);
+  const [searchEnabled, setSearchEnabled] = useState<boolean>(false);
 
   const { dispatch } = useContext(GeoStore);
 
@@ -86,11 +86,13 @@ const MapPanel: React.FC = () => {
         <Typography variant="h6" className={classes.title}>
           Activities
         </Typography>
+        {/* 
         <Box marginRight={2}>
           <IconButton size="small" onClick={searchSymptomsInRadius} color={setSearchColor()}>
             <Search/>
           </IconButton>
-        </Box>
+        </Box> 
+        */}
         <Box marginRight={2}>
           <Select value={layer} onChange={handleChange}>
             <MenuItem value="main">Main</MenuItem>

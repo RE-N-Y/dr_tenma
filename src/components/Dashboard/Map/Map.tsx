@@ -33,7 +33,7 @@ const Map: React.FC<MapProps> = ({
   setSearch,
 }) => {
   const { dispatch } = useContext(GeoStore);
-  const [map, setMap] = useState<mapboxgl.Map>();
+  const [ map, setMap ] = useState<mapboxgl.Map>();
 
   let ref: any;
 
@@ -112,11 +112,11 @@ const Map: React.FC<MapProps> = ({
         data: initData,
         cluster: true,
       });
-      map.addSource("search-point", {
-        type: "geojson",
-        data: initData,
-      });
-      map.addSource("search-circle", initPoly);
+      // map.addSource("search-point", {
+      //   type: "geojson",
+      //   data: initData,
+      // });
+      // map.addSource("search-circle", initPoly);
 
       map.addLayer(main);
       map.addLayer(cluster);
@@ -124,42 +124,44 @@ const Map: React.FC<MapProps> = ({
       map.addLayer(unclustered);
       map.addLayer(heatmap, "waterway-label");
       map.addLayer(heatmapPoint, "waterway-label");
-      map.addLayer(searchCircle);
-      map.addLayer(searchRadius);
 
-      map.on("mousedown", (e) => {
-        if (
-          map.getLayoutProperty("search-circle", "visibility") === "visible"
-        ) {
-          e.preventDefault();
+      // disable geoquery
+      // map.addLayer(searchCircle);
+      // map.addLayer(searchRadius);
 
-          clearPoint();
-          setPoint(e.lngLat.toArray(), 0, "visible");
-        }
-      });
+      // map.on("mousedown", (e) => {
+      //   if (
+      //     map.getLayoutProperty("search-circle", "visibility") === "visible"
+      //   ) {
+      //     e.preventDefault();
 
-      map.on("mouseenter", "search-circle", (e) => {
-        canvas.style.cursor = "move";
-      });
+      //     clearPoint();
+      //     setPoint(e.lngLat.toArray(), 0, "visible");
+      //   }
+      // });
 
-      map.on("mousedown", "search-circle", (e) => {
-        map.on("mousemove", onMove);
-        map.once("mouseup", () => {
-          map.off("mousemove", onMove);
-        });
-      });
+      // map.on("mouseenter", "search-circle", (e) => {
+      //   canvas.style.cursor = "move";
+      // });
 
-      map.on("mouseleave", "search-circle", () => {
-        let searchSource = map.getSource("search-point") as any;
-        canvas.style.cursor = "";
-        if (searchSource._data.features.length === 2) {
-          const center = searchSource._data.features[0].geometry.coordinates;
-          const edge = searchSource._data.features[1].geometry.coordinates;
-          const line = turf.lineString([center, edge]);
+      // map.on("mousedown", "search-circle", (e) => {
+      //   map.on("mousemove", onMove);
+      //   map.once("mouseup", () => {
+      //     map.off("mousemove", onMove);
+      //   });
+      // });
 
-          setSearch({ lat: center[1], lon: center[0], radius: length(line) });
-        }
-      });
+      // map.on("mouseleave", "search-circle", () => {
+      //   let searchSource = map.getSource("search-point") as any;
+      //   canvas.style.cursor = "";
+      //   if (searchSource._data.features.length === 2) {
+      //     const center = searchSource._data.features[0].geometry.coordinates;
+      //     const edge = searchSource._data.features[1].geometry.coordinates;
+      //     const line = turf.lineString([center, edge]);
+
+      //     setSearch({ lat: center[1], lon: center[0], radius: length(line) });
+      //   }
+      // });
 
       setMap(map);
     });
@@ -204,13 +206,13 @@ const Map: React.FC<MapProps> = ({
     map.setLayoutProperty("symptoms-point", "visibility", heatmapVisibility);
   }, [map, layer]);
 
-  useEffect(() => {
-    if (!map) return;
+  // useEffect(() => {
+  //   if (!map) return;
 
-    const visibility = searchEnabled ? "visible" : "none";
-    map.setLayoutProperty("search-circle", "visibility", visibility);
-    map.setLayoutProperty("search-radius", "visibility", visibility);
-  }, [map, searchEnabled]);
+  //   const visibility = searchEnabled ? "visible" : "none";
+  //   map.setLayoutProperty("search-circle", "visibility", visibility);
+  //   map.setLayoutProperty("search-radius", "visibility", visibility);
+  // }, [map, searchEnabled]);
 
   return (
     <>
